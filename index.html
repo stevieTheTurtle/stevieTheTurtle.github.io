@@ -302,6 +302,7 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
   .page{padding:20px 16px 26px}
 }
 @media (max-width: 900px){
+  .spread-bg{backdrop-filter:none; background:rgba(8,12,14,.7)}
   .modesw{display:flex; position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; gap:2px; padding:3px; border-radius:999px; background:var(--paper); border:2px solid var(--toon-ink); box-shadow:2px 2px 0 var(--toon-ink)}
   .modesw button{font:700 .68rem/1 var(--f-body); letter-spacing:.1em; text-transform:uppercase; height:34px; padding:0 14px; border:0; border-radius:999px; background:none; color:var(--ink); cursor:pointer; touch-action:manipulation}
   .modesw button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
@@ -324,8 +325,8 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
   .theme-toggle{box-shadow:0 4px 18px rgba(0,0,0,.18)}
   .mockup-flag{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   footer{padding-bottom:110px}
-  .hud{padding-block:10px 0}
-  .hud .id{flex:1 0 100%; font-size:.68rem; letter-spacing:0; white-space:nowrap}
+  .hud{padding:0}
+  .hud .id{display:none}
   .navpill{flex:1; justify-content:space-between}
   .navpill a{flex:1; padding:0 8px; font-size:.68rem; letter-spacing:.1em}
   .navpill a.home{flex:0 0 32px; padding:0}
@@ -592,7 +593,10 @@ function plate(kind){
   }
   return "";
 }
-const media=m=>m.img?`<img src="${m.img}" alt="" loading="lazy">`:m.video?`<video src="${m.video}" muted loop autoplay playsinline preload="metadata"></video>`:plate(m.plate);
+{const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target; if(e.isIntersecting){const p=v.play(); p&&p.catch(()=>{})} else v.pause()}),{threshold:.1});
+ const add=n=>{if(n.nodeType!==1)return; if(n.tagName==="VIDEO")io.observe(n); else n.querySelectorAll&&n.querySelectorAll("video").forEach(v=>io.observe(v))};
+ new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(add))).observe(document.documentElement,{childList:true,subtree:true}); document.querySelectorAll("video").forEach(v=>io.observe(v))}
+const media=m=>m.img?`<img src="${m.img}" alt="" loading="lazy">`:m.video?`<video src="${m.video}" muted loop playsinline preload="metadata"></video>`:plate(m.plate);
 /* ---------- cards ---------- */
 const grid=document.getElementById("grid");
 P.forEach(p=>{
@@ -716,8 +720,8 @@ render(false); syncThemeBtn();
 (function hero(){
   const vis=document.getElementById("visual"), canvas=document.getElementById("gl");
   if(!window.THREE){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">3D preview needs WebGL + network.</p>'); return}
-  let renderer; try{renderer=new THREE.WebGLRenderer({canvas,antialias:true})}catch(e){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">WebGL unavailable.</p>'); return}
-  const dpr=Math.min(devicePixelRatio||1,2); renderer.setPixelRatio(dpr);
+  let renderer; try{renderer=new THREE.WebGLRenderer({canvas,antialias:!(matchMedia("(pointer:coarse)").matches&&(devicePixelRatio||1)>=2),powerPreference:"high-performance"})}catch(e){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">WebGL unavailable.</p>'); return}
+  const coarse=matchMedia("(pointer:coarse)").matches; let dpr=Math.min(devicePixelRatio||1,coarse?1.5:2); renderer.setPixelRatio(dpr); renderer.info.autoReset=false;
   const cam=new THREE.PerspectiveCamera(30,1,.1,100); cam.position.set(0,-.1,10.4); cam.lookAt(0,-.25,0);
   const art=new THREE.Scene(), sci=new THREE.Scene();
 
@@ -1039,9 +1043,9 @@ render(false); syncThemeBtn();
     anchors.forEach((a,i)=>{
       if(a.off){wp.set(...a.off); a.o.localToWorld(wp)} else a.o.getWorldPosition(wp);
       wp.project(cam); const x=(wp.x+1)/2*W, y=(1-wp.y)/2*H;
-      const lx=W-176, ly=statsBottom+26+i*38;
+      const nar=W<520, lx=nar?W-82:W-176, ly=statsBottom+(nar?22:26)+i*(nar?34:38), val=nar?(a.v().match(/[\d,.]+ tris/)||[a.v()])[0]:a.v();
       svg+=`<line x1="${x}" y1="${y}" x2="${lx}" y2="${ly}"/><line x1="${lx}" y1="${ly}" x2="${lx+8}" y2="${ly}"/><circle cx="${x}" cy="${y}" r="3"/>
-            <text class="k" x="${lx+12}" y="${ly-2}">${a.k}</text><text x="${lx+12}" y="${ly+10}">${a.v()}</text>`;
+            <text class="k" x="${lx+12}" y="${ly-2}">${a.k}</text><text x="${lx+12}" y="${ly+10}">${val}</text>`;
     });
     callouts.innerHTML=svg;
   }
@@ -1049,7 +1053,7 @@ render(false); syncThemeBtn();
   // loop
   const el={fps:document.getElementById("sFps"),calls:document.getElementById("sCalls"),rot:document.getElementById("sRot"),gaze:document.getElementById("sGaze")};
   let running=true; new IntersectionObserver(([en])=>running=en.isIntersecting).observe(vis);
-  let last=performance.now(), fpsAcc=0, fpsN=0, tick=0; const t0=last, bb=new THREE.Box3(), bs=new THREE.Vector3(), g0=new THREE.Vector3(0,-2.2,0);
+  let last=performance.now(), fpsAcc=0, fpsN=0, tick=0, lastEx=-1, slow=0; const t0=last, bb=new THREE.Box3(), bs=new THREE.Vector3(), g0=new THREE.Vector3(0,-2.2,0);
   function frame(now){
     requestAnimationFrame(frame); if(!running)return;
     const dt=Math.min(.05,(now-last)/1000); last=now; const t=(now-t0)/1000;
@@ -1124,20 +1128,22 @@ render(false); syncThemeBtn();
     // lab props
     // render: art left, lab right
     const ex=Math.round(edge*W);
-    renderer.setScissorTest(true);
-    renderer.setScissor(0,0,ex,H); renderer.render(art,cam);
-    renderer.setScissor(ex,0,W-ex,H); renderer.render(sci,cam);
+    renderer.setScissorTest(true); renderer.info.reset();
+    if(ex>0){renderer.setScissor(0,0,ex,H); renderer.render(art,cam)}          // don't shade a half that isn't visible
+    if(ex<W){renderer.setScissor(ex,0,W-ex,H); renderer.render(sci,cam)}
     const calls=renderer.info.render.calls;
     renderer.setScissorTest(false);
-    // overlays
-    seam.style.transform=`translateX(${ex}px)`;
-    ovArt.style.clipPath=`inset(0 ${W-ex}px 0 0)`; ovSci.style.clipPath=`inset(0 0 0 ${ex}px)`;
+    // overlays (style writes only when the split moved)
+    if(ex!==lastEx){lastEx=ex; seam.style.transform=`translateX(${ex}px)`;
+      ovArt.style.clipPath=`inset(0 ${W-ex}px 0 0)`; ovSci.style.clipPath=`inset(0 0 0 ${ex}px)`; ovArt.style.visibility=ex>0?"visible":"hidden"; ovSci.style.visibility=ex<W?"visible":"hidden"}
     probeRay();
     if(++tick%6===0){
-      drawCallouts();
+      if(ex<W) drawCallouts();
       el.calls.textContent=calls; el.rot.textContent=`${(S.root.rotation.y*57.3).toFixed(1)}° / ${(S.head.rotation.x*57.3).toFixed(1)}°`;
       el.gaze.textContent=`${look.x.toFixed(2)}, ${look.y.toFixed(2)}`;
-      if(fpsAcc>.5){el.fps.textContent=(fpsN/fpsAcc).toFixed(0); fpsAcc=0; fpsN=0}
+      if(fpsAcc>.5){const f=fpsN/fpsAcc; el.fps.textContent=f.toFixed(0); fpsAcc=0; fpsN=0;
+        // adaptive resolution: if it stays under ~40fps, render fewer pixels (never below 1x)
+        slow=f<40?slow+1:0; if(slow>=3&&dpr>1){dpr=Math.max(1,dpr*.8); renderer.setPixelRatio(dpr); renderer.setSize(W,H,false); slow=0}}
     }
   }
   requestAnimationFrame(frame);
