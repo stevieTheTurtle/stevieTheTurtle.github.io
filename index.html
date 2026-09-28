@@ -720,8 +720,8 @@ render(false); syncThemeBtn();
 (function hero(){
   const vis=document.getElementById("visual"), canvas=document.getElementById("gl");
   if(!window.THREE){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">3D preview needs WebGL + network.</p>'); return}
-  let renderer; try{renderer=new THREE.WebGLRenderer({canvas,antialias:!(matchMedia("(pointer:coarse)").matches&&(devicePixelRatio||1)>=2),powerPreference:"high-performance"})}catch(e){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">WebGL unavailable.</p>'); return}
-  const coarse=matchMedia("(pointer:coarse)").matches; let dpr=Math.min(devicePixelRatio||1,coarse?1.5:2); renderer.setPixelRatio(dpr); renderer.info.autoReset=false;
+  let renderer; try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:"high-performance"})}catch(e){vis.insertAdjacentHTML("beforeend",'<p class="fallback-note">WebGL unavailable.</p>'); return}
+  const coarse=matchMedia("(pointer:coarse)").matches; let dpr=Math.min(devicePixelRatio||1,2); renderer.setPixelRatio(dpr); renderer.info.autoReset=false;
   const cam=new THREE.PerspectiveCamera(30,1,.1,100); cam.position.set(0,-.1,10.4); cam.lookAt(0,-.25,0);
   const art=new THREE.Scene(), sci=new THREE.Scene();
 
@@ -1142,8 +1142,8 @@ render(false); syncThemeBtn();
       el.calls.textContent=calls; el.rot.textContent=`${(S.root.rotation.y*57.3).toFixed(1)}° / ${(S.head.rotation.x*57.3).toFixed(1)}°`;
       el.gaze.textContent=`${look.x.toFixed(2)}, ${look.y.toFixed(2)}`;
       if(fpsAcc>.5){const f=fpsN/fpsAcc; el.fps.textContent=f.toFixed(0); fpsAcc=0; fpsN=0;
-        // adaptive resolution: if it stays under ~40fps, render fewer pixels (never below 1x)
-        slow=f<40?slow+1:0; if(slow>=3&&dpr>1){dpr=Math.max(1,dpr*.8); renderer.setPixelRatio(dpr); renderer.setSize(W,H,false); slow=0}}
+        // adaptive resolution: if it stays under ~28fps, render slightly fewer pixels (never below 1.5x)
+        slow=f<28?slow+1:0; if(slow>=4&&dpr>1.5){dpr=Math.max(1.5,dpr*.85); renderer.setPixelRatio(dpr); renderer.setSize(W,H,false); slow=0}}
     }
   }
   requestAnimationFrame(frame);
