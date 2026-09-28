@@ -278,12 +278,13 @@ a{color:inherit}
 .contact{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); background:var(--paper-2); border:1px solid var(--grid-strong); border-top:3px solid var(--accent)}
 .addrs{display:grid; gap:18px; align-content:center; padding:24px}
 .lnks{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; align-content:center; padding:24px; border-left:1px dashed var(--grid-strong)}
-.lnk{justify-content:flex-start}
+.lnk{justify-content:center}
 @media (max-width: 760px){ .contact{grid-template-columns:1fr} .lnks{border-left:0; border-top:1px dashed var(--grid-strong)} }
-.lnk{--brand:var(--ink); display:inline-flex; align-items:center; gap:9px; height:40px; padding:0 14px 0 10px; text-decoration:none; color:var(--ink);
+.lnk{--brand:var(--ink); display:inline-flex; align-items:center; justify-content:center; position:relative; gap:9px; height:84px; padding:0; text-decoration:none; color:var(--ink);
   border:1px solid var(--grid-strong); background:var(--paper); font:600 .7rem/1 var(--f-body); letter-spacing:.08em; text-transform:uppercase;
   --soc-bg:var(--paper); transition:background .15s, color .15s, border-color .15s, transform .2s cubic-bezier(.3,1.6,.5,1)}
-.lnk svg{width:20px; height:20px; flex:none}
+.lnk svg{width:34px; height:34px; flex:none}
+.lnk span{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}   /* label kept for screen readers */
 .lnk:hover, .lnk:focus-visible{--soc-bg:var(--brand); background:var(--brand); border-color:var(--brand); color:#fff; transform:translateY(-2px)}
 .lnk.uni{--brand:#003D7C} .lnk.li{--brand:#0A66C2} .lnk.gh{--brand:#24292F} .lnk.itch{--brand:#FA5C5C}
 footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
