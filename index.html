@@ -136,6 +136,7 @@ a{color:inherit}
 .stats .t{color:var(--lab-line); display:flex; justify-content:space-between; border-bottom:1px solid var(--lab-grid); padding-bottom:4px; margin-bottom:4px}
 .stats dl{display:grid; grid-template-columns:auto 1fr; gap:0 10px; margin:0}
 .stats dt{color:var(--lab-dim); white-space:nowrap} .stats dd{margin:0; text-align:right; white-space:nowrap}
+.modesw,.ctrl-tog{display:none}
 .callouts{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
 .callouts line{stroke:var(--lab-line); stroke-width:1; opacity:.8}
 .callouts circle{fill:var(--lab); stroke:var(--lab-line); stroke-width:1.2}
@@ -294,21 +295,41 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
   .cover-pin{height:auto}
   .cover-pin > .cover{position:static; min-height:0}
   .cover-pin .visual{aspect-ratio:1/1.1; height:auto}
-  .stats{width:170px; font-size:.6rem}
+  .stats{font-size:.6rem}
   .explorer{grid-template-columns:1fr}
   .pages{grid-template-columns:1fr}
   .page.media{border-right:0; border-bottom:1px solid var(--grid-strong)}
   .page{padding:20px 16px 26px}
 }
+@media (max-width: 900px){
+  .modesw{display:flex; position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:5; gap:2px; padding:3px; border-radius:999px; background:var(--paper); border:2px solid var(--toon-ink); box-shadow:2px 2px 0 var(--toon-ink)}
+  .modesw button{font:700 .68rem/1 var(--f-body); letter-spacing:.1em; text-transform:uppercase; height:34px; padding:0 14px; border:0; border-radius:999px; background:none; color:var(--ink); cursor:pointer; touch-action:manipulation}
+  .modesw button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+  .seam-hint{display:none}
+  .stats{width:132px; padding:6px 8px}
+  .stats .t span:first-child{display:none}
+  .stats dl>:nth-child(n+5):nth-child(-n+8), .stats dl>:nth-child(n+11){display:none}
+  .ctrl{width:auto}
+  .ctrl-tog{display:block; width:100%; padding:8px 10px; background:none; border:0; color:var(--lab-text); font:500 .64rem/1 var(--f-mono); text-align:left; cursor:pointer; letter-spacing:.06em; text-transform:uppercase; touch-action:manipulation}
+  .ctrl-tog::before{content:"▸ "} .ctrl.open .ctrl-tog::before{content:"▾ "}
+  .ctrl .body{display:none}
+  .ctrl.open{right:12px}
+  .ctrl.open .body{display:grid}
+  .ctrl.open ~ .stats{display:none}
+}
 @media (max-width: 600px){
-  .hud{padding-block:8px}
-  .hud .wrap{gap:8px 12px}
+  .hud{position:static; margin-inline:0; padding:10px 16px 0; background:none; border:0; backdrop-filter:none}
+  .hud nav{position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); z-index:40; margin:0; flex-wrap:nowrap; justify-content:space-between; gap:10px}
+  .navpill{box-shadow:0 4px 18px rgba(0,0,0,.18)}
+  .theme-toggle{box-shadow:0 4px 18px rgba(0,0,0,.18)}
+  .mockup-flag{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  footer{padding-bottom:110px}
+  .hud{padding-block:10px 0}
   .hud .id{flex:1 0 100%; font-size:.68rem; letter-spacing:0; white-space:nowrap}
-  .hud nav{margin-left:0; flex:1 0 100%; flex-wrap:nowrap; justify-content:space-between}
   .navpill{flex:1; justify-content:space-between}
   .navpill a{flex:1; padding:0 8px; font-size:.68rem; letter-spacing:.1em}
   .navpill a.home{flex:0 0 32px; padding:0}
-    .theme-toggle{margin-left:0; flex:none}
+  .theme-toggle{margin-left:0; flex:none}
   .cover{padding-block:22px 20px; gap:22px}
   .cover h1{font-size:clamp(2.6rem, 15vw, 3.6rem); margin:0 0 .3em}
   .cover .lede{max-width:none; font-size:1.05rem}
@@ -365,6 +386,7 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
       <div class="ov" id="ovSci">
         <svg class="callouts" id="callouts" aria-hidden="true"></svg>
         <div class="ctrl" id="ctrl" aria-label="Animation controls" role="group">
+          <button class="ctrl-tog" id="ctrlTog" type="button" aria-expanded="false">Controls</button>
           <div class="body">
             <label>follow speed<output id="o-follow">1.0×</output><input type="range" id="p-follow" min="0.2" max="3" step="0.1" value="1"></label>
             <label>max turn<output id="o-yaw">63°</output><input type="range" id="p-yaw" min="10" max="90" step="1" value="63"></label>
@@ -387,6 +409,7 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
         <div class="probe" id="probe"><span class="tag" id="probeTag"></span></div>
       </div>
 
+      <div class="modesw" id="modesw" role="group" aria-label="Portrait mode"><button type="button" id="modeGame" aria-pressed="true">Game</button><button type="button" id="modeWire" aria-pressed="false">Wireframe</button></div>
       <div class="seam" id="seam" aria-hidden="true"><span class="seam-hint" id="seamHint"><i></i>scroll</span></div>
     </div>
   </section>
@@ -871,7 +894,14 @@ render(false); syncThemeBtn();
     const r=vis.getBoundingClientRect(), start=Math.min(vh*.85, r.top+scrollY); // stacked: from where the view first sits, over ~80% of its height
     return Math.min(1,Math.max(0,(start-r.top)/(r.height*.8)));
   }
-  function onScroll(){const p=scrollProgress(); target=E0+(E1-E0)*ease(p); seamHint.style.opacity=p>.04?0:1}
+  // stacked layout (phones/tablets): no pinned scroll-split, a Game/Wireframe switch picks the whole view instead
+  let mobWire=false; const stacked=()=>getComputedStyle(pin.firstElementChild).position!=="sticky";
+  function onScroll(){ if(stacked()){target=mobWire?0:1; seamHint.style.opacity=0; return}
+    const p=scrollProgress(); target=E0+(E1-E0)*ease(p); seamHint.style.opacity=p>.04?0:1}
+  {const g=document.getElementById("modeGame"), w=document.getElementById("modeWire"), ct=document.getElementById("ctrl"), tg=document.getElementById("ctrlTog");
+   const setMode=wire=>{mobWire=wire; g.setAttribute("aria-pressed",!wire); w.setAttribute("aria-pressed",wire); onScroll()};
+   g.onclick=()=>setMode(false); w.onclick=()=>setMode(true);
+   tg.onclick=()=>{const o=ct.classList.toggle("open"); tg.setAttribute("aria-expanded",o)}}
   addEventListener("scroll",onScroll,{passive:true}); addEventListener("resize",onScroll); onScroll(); edge=target;
 
   const ray=new THREE.Raycaster();
@@ -961,11 +991,13 @@ render(false); syncThemeBtn();
     aimYaw=Math.max(-my,Math.min(my,Math.atan2(d.x,d.z))); aimPitch=Math.max(-mp,Math.min(mp,-Math.atan2(d.y,Math.hypot(d.x,d.z))))}}
   let pfx=-1, px=0, py=0;
   canvas.addEventListener("pointermove",e=>{const fx=toNdc(e); pfx=fx; const r=vis.getBoundingClientRect(); px=e.clientX-r.left; py=e.clientY-r.top; look.copy(ndc); hover=true; aim(); if(fx<edge) tryCatch()});
-  canvas.addEventListener("pointerleave",e=>{if(e.pointerType==="touch")return; look.set(0,0); hover=false; pfx=-1});   // touch: keep facing the last tap
+  canvas.addEventListener("pointerleave",e=>{if(e.pointerType==="touch")return; look.set(0,0); hover=false; pfx=-1});   // touch: no leave-reset; the idle timer below lets go instead
   // eyes track the cursor anywhere on the page (last known position kept; re-projected every frame so scrolling stays correct)
   const eyeRay=new THREE.Raycaster(), eyeAimPt=new THREE.Vector3(), eyeNdc=new THREE.Vector2(); let eyeSeen=false, eyeCX=0, eyeCY=0;
   addEventListener("pointermove",e=>{eyeCX=e.clientX; eyeCY=e.clientY; eyeSeen=true},{passive:true});
-  addEventListener("pointerdown",e=>{eyeCX=e.clientX; eyeCY=e.clientY; eyeSeen=true},{passive:true});   // touch: a tap is the only pointer event, so eyes look where the finger landed
+  let tapIdle=0;
+  addEventListener("pointerdown",e=>{eyeCX=e.clientX; eyeCY=e.clientY; eyeSeen=true;
+    if(e.pointerType==="touch"){clearTimeout(tapIdle); tapIdle=setTimeout(()=>{eyeSeen=false; look.set(0,0); hover=false; pfx=-1},1000)}},{passive:true});   // touch: a tap is the only pointer event, so eyes/head follow it, then return to idle 1s after the last tap
   const probe=document.getElementById("probe"), probeTag=document.getElementById("probeTag"), ta=new THREE.Vector3(), tb=new THREE.Vector3(), tc=new THREE.Vector3(), nW=new THREE.Vector3();
   function probeRay(){
     const on=P.probe&&hover&&pfx>=edge; probe.style.display=on?"block":"none";
@@ -980,7 +1012,7 @@ render(false); syncThemeBtn();
     hitTri.visible=hitEdge.visible=hitN.visible=true;
     probeTag.innerHTML=`<b>HIT</b> ${h.object.parent.userData.k} · face ${h.faceIndex}<br>d ${h.distance.toFixed(3)} · p(${h.point.x.toFixed(2)}, ${h.point.y.toFixed(2)}, ${h.point.z.toFixed(2)})<br>n(${nW.x.toFixed(2)}, ${nW.y.toFixed(2)}, ${nW.z.toFixed(2)})`;
   }
-  canvas.addEventListener("pointerdown",e=>{const fx=toNdc(e); if(e.pointerType==="touch"){look.copy(ndc); hover=true; aim()}
+  canvas.addEventListener("pointerdown",e=>{const fx=toNdc(e); if(e.pointerType==="touch"){look.copy(ndc); hover=true; aim(); pfx=fx; const r=vis.getBoundingClientRect(); px=e.clientX-r.left; py=e.clientY-r.top}
     if(fx<edge){ if(tryCatch())return; ray.setFromCamera(ndc,cam); if(ray.intersectObject(A.root,true).length){audio(); startOoh();
       if(!starsOn){starsOn=true; audio(); const tn=(performance.now()-t0)/1000; stars.forEach((s,k)=>{const u=s.userData; u.alive=true; u.spawn=-k*.15; u.grace=.5; u.phase=safePhase(k,u.phase,tn); s.visible=true});
         pop(new THREE.Vector3(0,.9,.8),30,3); coins.classList.remove("locked"); say("Wahoo! Now catch the stars!")}
@@ -1069,11 +1101,11 @@ render(false); syncThemeBtn();
     if(!reduce){
       clouds.forEach((c,i)=>{c.position.x+=dt*(.13+i*.045); if(c.position.x>5.4)c.position.x=-5.4}); }
     {const zb=-(orbitR()+.35);     // behind every star (orbit radius + star size) -> stars always pass in front
-     const bhw=Math.tan(cam.fov*Math.PI/360)*(cam.position.z-zb)*(W/H), bx=Math.min(2.35,bhw-.85*1.12-.1);   // keep the whole bubble (half-width .85, ~12% pop overshoot) inside the visible width at its depth
-     bubble.position.set(bx, 1.55+Math.sin(t*1.3)*.04, zb);
+     const bhw=Math.tan(cam.fov*Math.PI/360)*(cam.position.z-zb)*(W/H), bm=W<600?1.5:1, bx=Math.min(2.35,bhw-.85*bm*1.12-.1);   // keep the whole bubble (half-width .85, ~12% pop overshoot) inside the visible width at its depth
+     bubble.position.set(bx, 1.55+(bm-1)*.35+Math.sin(t*1.3)*.04, zb);
      if(bubbleT<1){bubbleT=Math.min(1,bubbleT+dt*3)} else if(bubbleHide>0){bubbleHide-=dt} else if(bubbleOut<1){bubbleOut=Math.min(1,bubbleOut+dt*5)}
      const pb=1+2.70158*Math.pow(bubbleT-1,3)+1.70158*Math.pow(bubbleT-1,2), sc=bubbleText?Math.max(0,pb*(1-bubbleOut)):0;
-     bubble.scale.setScalar(sc); bubble.rotation.z=Math.sin(t*.9)*.03;
+     bubble.scale.setScalar(sc*bm); bubble.rotation.z=Math.sin(t*.9)*.03;
      if(!starsOn&&bubbleOut>=1&&bubbleText){hintT=(hintT||0)+dt; if(hintT>4){hintT=0; say("Psst… poke my head!")}}}
     stars.forEach((s,k)=>{const u=s.userData; if(!starsOn)return;
       if(!u.alive){u.t+=dt; if(u.t>2.5){u.alive=true; s.visible=true; u.phase=safePhase(k,u.phase+1.3,t); u.spawn=0; u.grace=.5}}
