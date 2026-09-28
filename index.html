@@ -98,11 +98,7 @@ a{color:inherit}
 .cover .eyebrow{color:var(--ink-soft)}
 .cover h1{font-family:var(--f-display); font-weight:800; font-size:clamp(2.5rem, 5.6vw, 4.8rem); line-height:.95; letter-spacing:-.02em; margin:.3em 0 .35em; text-wrap:balance}
 .cover h1 .l2{display:block; -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; color:var(--paper)}   /* fill in the page colour is painted over the stroke: hides the overlapping-contour lines of the variable font; stroke doubled because half of it is covered */
-.cover .lede{font-size:1.12rem; max-width:36ch; margin:0 0 26px}
-.press{font:600 .9rem/1 var(--f-display); letter-spacing:.08em; text-transform:uppercase; display:inline-flex; align-items:center; gap:12px; padding:15px 22px; cursor:pointer; background:var(--ink); color:var(--paper); border:none; border-radius:2px}
-.press .tri{width:0; height:0; border-left:9px solid var(--coin); border-block:6px solid transparent; animation:blink 1.1s steps(1) infinite}
-.press:hover{background:var(--accent)}
-@keyframes blink{50%{opacity:0}}
+.cover .lede{font-size:1.12rem; max-width:36ch; margin:0}
 
 /* ---------- Hero visual: two worlds ---------- */
 .visual{position:relative; aspect-ratio:1/1.02; max-width:100%; overflow:hidden; border:2px solid var(--ink); background:var(--lab); user-select:none; -webkit-user-select:none}
@@ -289,7 +285,6 @@ a{color:inherit}
 .lnk svg{width:20px; height:20px; flex:none}
 .lnk:hover, .lnk:focus-visible{--soc-bg:var(--brand); background:var(--brand); border-color:var(--brand); color:#fff; transform:translateY(-2px)}
 .lnk.uni{--brand:#003D7C} .lnk.li{--brand:#0A66C2} .lnk.gh{--brand:#24292F} .lnk.itch{--brand:#FA5C5C}
-@media (max-width: 760px){ 
 footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
 .mockup-flag{position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); z-index:30; font:600 .64rem/1 var(--f-body); letter-spacing:.1em; text-transform:uppercase; background:var(--coin); color:var(--toon-ink); padding:6px 9px; border:2px solid var(--toon-ink); transform:rotate(-2deg)}
 
@@ -305,7 +300,20 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
   .page.media{border-right:0; border-bottom:1px solid var(--grid-strong)}
   .page{padding:20px 16px 26px}
 }
-@media (max-width: 520px){ @media (prefers-reduced-motion: reduce){
+@media (max-width: 600px){
+  .hud{padding-block:8px}
+  .hud .wrap{gap:8px 12px}
+  .hud .id{flex:1 0 100%; font-size:.68rem; letter-spacing:0; white-space:nowrap}
+  .hud nav{margin-left:0; flex:1 0 100%; flex-wrap:nowrap; justify-content:space-between}
+  .navpill{flex:1; justify-content:space-between}
+  .navpill a{flex:1; padding:0 8px; font-size:.68rem; letter-spacing:.1em}
+  .navpill a.home{flex:0 0 32px; padding:0}
+    .theme-toggle{margin-left:0; flex:none}
+  .cover{padding-block:22px 20px; gap:22px}
+  .cover h1{font-size:clamp(2.6rem, 15vw, 3.6rem); margin:0 0 .3em}
+  .cover .lede{max-width:none; font-size:1.05rem}
+}
+@media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important; transition:none!important}
   html{scroll-behavior:auto}
 }
@@ -344,7 +352,6 @@ footer{padding-block:40px 60px; color:var(--ink-soft); display:flex; justify-con
     <div>
       <h1>Stefano<span class="l2">Calzolari</span></h1>
       <p class="lede">Explorer on the <span class="hl">edge of science &amp; art</span>. PhD researcher in Computer Graphics &amp; XR. I build virtual humans, playable worlds and the tools between them.</p>
-      <button class="press" id="pressStart" type="button"><span class="tri" aria-hidden="true"></span>Press start</button>
     </div>
 
     <div class="visual" id="visual">
@@ -609,9 +616,6 @@ grid.addEventListener("keydown",e=>{
   const cols=vis.filter(c=>c.offsetTop===vis[0].offsetTop).length, d={ArrowRight:1,ArrowLeft:-1,ArrowDown:cols,ArrowUp:-cols}[e.key];
   if(d){e.preventDefault(); const n=vis[Math.min(vis.length-1,Math.max(0,i+d))]; n.focus(); n.scrollIntoView({block:"nearest",behavior:reduce?"auto":"smooth"})}
 });
-function pressStart(){document.getElementById("index").scrollIntoView({behavior:reduce?"auto":"smooth"});
-  setTimeout(()=>{const f=[...grid.children].find(c=>!c.hidden); f&&f.focus({preventScroll:true})},reduce?0:450)}
-document.getElementById("pressStart").onclick=pressStart;
 
 /* ---------- spread ---------- */
 const bg=document.getElementById("spreadBg"); let lastFocus=null;
@@ -644,7 +648,6 @@ document.getElementById("spClose").onclick=closeSpread;
 bg.addEventListener("click",e=>{if(e.target===bg)closeSpread()});
 document.addEventListener("keydown",e=>{
   if(!bg.hidden){ if(e.key==="Escape")closeSpread(); if(e.key==="ArrowRight")document.getElementById("spNext").click(); if(e.key==="ArrowLeft")document.getElementById("spPrev").click(); return; }
-  if(e.key==="Enter"&&(document.activeElement===document.body||!document.activeElement)){e.preventDefault(); pressStart()}
 });
 
 /* ---------- nav: highlight the section in view ---------- */
@@ -958,10 +961,11 @@ render(false); syncThemeBtn();
     aimYaw=Math.max(-my,Math.min(my,Math.atan2(d.x,d.z))); aimPitch=Math.max(-mp,Math.min(mp,-Math.atan2(d.y,Math.hypot(d.x,d.z))))}}
   let pfx=-1, px=0, py=0;
   canvas.addEventListener("pointermove",e=>{const fx=toNdc(e); pfx=fx; const r=vis.getBoundingClientRect(); px=e.clientX-r.left; py=e.clientY-r.top; look.copy(ndc); hover=true; aim(); if(fx<edge) tryCatch()});
-  canvas.addEventListener("pointerleave",()=>{look.set(0,0); hover=false; pfx=-1});
+  canvas.addEventListener("pointerleave",e=>{if(e.pointerType==="touch")return; look.set(0,0); hover=false; pfx=-1});   // touch: keep facing the last tap
   // eyes track the cursor anywhere on the page (last known position kept; re-projected every frame so scrolling stays correct)
   const eyeRay=new THREE.Raycaster(), eyeAimPt=new THREE.Vector3(), eyeNdc=new THREE.Vector2(); let eyeSeen=false, eyeCX=0, eyeCY=0;
   addEventListener("pointermove",e=>{eyeCX=e.clientX; eyeCY=e.clientY; eyeSeen=true},{passive:true});
+  addEventListener("pointerdown",e=>{eyeCX=e.clientX; eyeCY=e.clientY; eyeSeen=true},{passive:true});   // touch: a tap is the only pointer event, so eyes look where the finger landed
   const probe=document.getElementById("probe"), probeTag=document.getElementById("probeTag"), ta=new THREE.Vector3(), tb=new THREE.Vector3(), tc=new THREE.Vector3(), nW=new THREE.Vector3();
   function probeRay(){
     const on=P.probe&&hover&&pfx>=edge; probe.style.display=on?"block":"none";
@@ -976,7 +980,7 @@ render(false); syncThemeBtn();
     hitTri.visible=hitEdge.visible=hitN.visible=true;
     probeTag.innerHTML=`<b>HIT</b> ${h.object.parent.userData.k} · face ${h.faceIndex}<br>d ${h.distance.toFixed(3)} · p(${h.point.x.toFixed(2)}, ${h.point.y.toFixed(2)}, ${h.point.z.toFixed(2)})<br>n(${nW.x.toFixed(2)}, ${nW.y.toFixed(2)}, ${nW.z.toFixed(2)})`;
   }
-  canvas.addEventListener("pointerdown",e=>{const fx=toNdc(e);
+  canvas.addEventListener("pointerdown",e=>{const fx=toNdc(e); if(e.pointerType==="touch"){look.copy(ndc); hover=true; aim()}
     if(fx<edge){ if(tryCatch())return; ray.setFromCamera(ndc,cam); if(ray.intersectObject(A.root,true).length){audio(); startOoh();
       if(!starsOn){starsOn=true; audio(); const tn=(performance.now()-t0)/1000; stars.forEach((s,k)=>{const u=s.userData; u.alive=true; u.spawn=-k*.15; u.grace=.5; u.phase=safePhase(k,u.phase,tn); s.visible=true});
         pop(new THREE.Vector3(0,.9,.8),30,3); coins.classList.remove("locked"); say("Wahoo! Now catch the stars!")}
