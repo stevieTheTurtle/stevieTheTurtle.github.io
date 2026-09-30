@@ -192,7 +192,9 @@ a{color:inherit}
 .card h3{font-family:var(--f-display); font-weight:600; font-size:1.02rem; line-height:1.2; margin:2px 4px 0; text-wrap:balance}
 .card .meta{margin:0 4px; color:var(--ink-soft); font-size:.86rem; line-height:1.4}
 .card .tags{margin:0 4px; display:flex; gap:4px 10px; flex-wrap:wrap; color:var(--accent)}
-.stamp{position:absolute; right:10px; top:12px; transform:rotate(8deg); font:600 .7rem/1 var(--f-body); letter-spacing:.14em; text-transform:uppercase; color:var(--stamp-red); border:2px solid var(--stamp-red); padding:5px 8px; border-radius:3px; background:color-mix(in srgb, var(--paper-2) 75%, transparent)}
+.stamp{position:absolute; right:10px; top:12px; transform:rotate(8deg); font:700 .7rem/1 var(--f-body); letter-spacing:.14em; text-transform:uppercase; color:#1B1B2F; border:2px solid #1B1B2F; padding:4px 10px; border-radius:3px;
+  background:repeating-linear-gradient(-45deg,#FFC928 0 7px,#1B1B2F 7px 14px)}
+.stamp{text-shadow:0 0 3px #FFC928,0 0 3px #FFC928,0 0 2px #FFC928,0 0 2px #FFC928}
 
 /* ---------- Spread (one cohesive sheet) ---------- */
 .spread-bg{position:fixed; inset:0; z-index:50; background:rgba(8,12,14,.55); backdrop-filter:blur(3px); display:grid; place-items:center; padding:max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom))}
@@ -209,8 +211,7 @@ a{color:inherit}
   .spread{display:flex; flex-direction:column; height:100%; overflow:hidden}
   .pages{flex:1; min-height:0}
   .page.media{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:var(--grid-strong) transparent}
-  .page.info{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none}   /* safety on short screens, no visible bar */
-  .page.info::-webkit-scrollbar{display:none}
+  .page.info{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:var(--grid-strong) transparent}
 }
 .page{padding:26px 32px 34px; min-width:0}
 .page.media{border-right:1px solid var(--grid-strong); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px}
@@ -218,6 +219,7 @@ a{color:inherit}
 .page h4:first-child{margin-top:0}
 .page h4::after{content:""; flex:1; border-top:1px solid var(--grid-strong)}
 .page p{margin:0; max-width:62ch}
+.page p+p{margin-top:12px}
 .objective{font:400 1.2rem/1.4 var(--f-display); color:var(--ink); text-wrap:balance}
 .kv{display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:.92rem}
 .kv dt{font:600 .64rem/1.9 var(--f-body); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft)}
@@ -235,7 +237,22 @@ a{color:inherit}
 .gallery{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 .shot{position:relative; margin:0; padding:6px; background:var(--paper-2); border:1px solid var(--grid-strong)}
 .shot.a{grid-column:1 / -1}
-.shot img, .shot video, .shot svg{width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--paper)}
+.shot img, .shot video, .shot svg, .shot iframe{width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--paper)}
+.shot iframe{border:0; aspect-ratio:16/9; display:block}
+#lightbox{position:fixed; inset:0; z-index:80; background:rgba(5,8,10,.93); display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-rows:minmax(0,1fr) auto; align-items:center; gap:12px; padding:max(16px,env(safe-area-inset-top)) 16px 16px}
+#lightbox[hidden]{display:none}
+#lightbox .lb-stage{grid-column:2; grid-row:1; width:100%; height:100%; display:grid; place-items:center; min-width:0; min-height:0}
+#lightbox .lb-stage img, #lightbox .lb-stage svg{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; background:none}
+#lightbox .lb-stage svg{width:min(100%,160vh); aspect-ratio:16/10}
+#lightbox .lb-cap{grid-column:2; grid-row:2; margin:0; text-align:center; color:#dfe7ea; font:600 .75rem/1.3 var(--f-body); letter-spacing:.12em; text-transform:uppercase}
+#lightbox button{background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.25); font:600 1rem/1 var(--f-body); padding:12px 14px; cursor:pointer}
+#lightbox button:hover,#lightbox button:focus-visible{background:rgba(255,255,255,.2)}
+#lightbox .lb-close{position:absolute; top:max(12px,env(safe-area-inset-top)); right:12px; z-index:2}
+#lightbox .lb-nav.prev{grid-column:1; grid-row:1} #lightbox .lb-nav.next{grid-column:3; grid-row:1}
+@media (max-width:600px){#lightbox{grid-template-columns:minmax(0,1fr)} #lightbox .lb-nav{display:none} #lightbox .lb-stage,#lightbox .lb-cap{grid-column:1}}
+#pageMedia .shot img, #pageMedia .shot svg{cursor:zoom-in}
+.yt-fallback{position:relative; display:block}
+.yt-fallback span{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.75); color:#fff; font:600 .8rem/1 var(--f-body); letter-spacing:.1em; padding:12px 18px; border-radius:40px}
 .shot figcaption{font:600 .62rem/1 var(--f-body); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); padding:8px 2px 2px}
 .notes{margin-top:22px; display:grid; gap:10px}
 .notes p{padding-left:14px; border-left:3px solid var(--coin); font-style:italic}
@@ -512,62 +529,69 @@ const P=[
   objective:"Build a playable arcade game on bare OpenGL, with no engine to lean on.",
   method:"C++ render loop on OpenGL + GLUT; Assimp for model import, DevIL for textures, irrKlang for audio. The Overlook's corridors become an arcade track.",
   equip:["C++","OpenGL","GLUT","Assimp","DevIL","irrKlang","Blender"], links:[["Play on itch.io","https://stevietheturtle.itch.io/the-shining"],["Source on GitHub","https://github.com/stevieTheTurtle/Progetto_IG_gruppo23"]],
-  art:{shots:[{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ5LnBuZw==/original/pyI59V.png",cap:"Overlook corridor"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ4LnBuZw==/original/0AzCGg.png",cap:"Corridor to Room 237"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ2LnBuZw==/original/fTVdGG.png",cap:"The tricycle"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ3LnBuZw==/original/P3Fson.png",cap:"Dolls on the hexagon carpet"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQwLnBuZw==/original/pvoMrD.png",cap:"Broken glass"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzM3LnBuZw==/original/rfwCI5.png",cap:"Room 237 bathroom"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzM5LnBuZw==/original/jC78LF.png",cap:"Room 237 sink"}],
+  art:{shots:[{video:"assets/shining/gameplay.mp4",cap:"gameplay"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ5LnBuZw==/original/pyI59V.png",cap:"Overlook corridor"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ4LnBuZw==/original/0AzCGg.png",cap:"Corridor to Room 237"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ2LnBuZw==/original/fTVdGG.png",cap:"The tricycle"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQ3LnBuZw==/original/P3Fson.png",cap:"Dolls on the hexagon carpet"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzQwLnBuZw==/original/pvoMrD.png",cap:"Broken glass"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzM3LnBuZw==/original/rfwCI5.png",cap:"Room 237 bathroom"},{img:ITCH+"aW1hZ2UvMTI1NDYwOS83MzEwNzM5LnBuZw==/original/jC78LF.png",cap:"Room 237 sink"}],
   says:["Kubrick's hexagon carpet, the twins, the tricycle: all modelled and textured by hand in Blender."]}},
  {id:"tomato", title:"NatureSweet Tomatoes — CG ad", t:2021.1, years:"Feb–Jun 2021", ctx:"Computer Animation course · PoliTo", tags:["Animation"],
-  thumb:{plate:"tomato"}, role:"3D animation & rigging", crew:"Stefano Calzolari, Davide Chemin, Tiziano Carnevale",
+  thumb:{img:"assets/tomato/cover.jpg"}, role:"3D animation & rigging", crew:"Stefano Calzolari, Davide Chemin, Tiziano Carnevale",
   objective:"Recreate a real TV commercial shot for shot, to prove every technique in the animation syllabus.",
   method:"Paths, animation curves, constraints, IK rigs, blendshapes and lattice deformers, all in Blender, then composited.",
   equip:["Blender","Rigging","IK","Blendshapes","Lattice"], links:[["Watch the short","https://drive.google.com/file/d/1QdfQ1EWB2GYoddNIXhvccOcNVlvEquHm/view"],["Original ad","https://www.youtube.com/watch?v=bRn3HysWxl0"]],
-  art:{plates:["tomato"], says:["Squash and stretch on a tomato is harder than it looks!","Video stills coming soon."]}},
- {id:"windy", title:"Windy Days", t:2021.2, years:"Mar–Jul 2021", ctx:"Game Design & Gamification · PoliTo", tags:["Games","Sound"],
+  art:{shots:[{drive:"1QdfQ1EWB2GYoddNIXhvccOcNVlvEquHm",cap:"the short"},{img:"assets/tomato/cover.jpg",cap:"the final shot"}], says:["Squash and stretch on a tomato is harder than it looks!"]}},
+ {id:"windy", title:"Windy Days", t:2021.2, years:"Mar–Jul 2021", ctx:"Game Design & Gamification · PoliTo", tags:["Games","Audio"],
   thumb:{img:ITCH+"aW1nLzEyMTc4ODk0LmpwZw==/original/AThQMA.jpg"}, role:"Lead programming, design", crew:"Giorgio Arrigo, Stefano Calzolari, Tiziano Carnevale, Luca Donalisio, Alberto Roletto, M. Reza Kamyar",
   objective:"Prototype a game where wind is the core verb: drift with it or fight it.",
-  method:"Hybrid metroidvania: 2D platforming sections switch to top-down third-person combat. C# systems for wind fields, traversal and combat.",
+  method:"<b>Two dimensions.</b> A hybrid metroidvania: levels switch between 2D side-scrolling platforming and top-down third-person rooms (3 side-scrolling levels and 8 top-down rooms, from a small cave and fountain rooms to a boss room and a mine). Two character controllers and a camera manager hand the player over between the two views.<br><br><b>Wind.</b> Wind generators push the player back while walking and jumping, and some carry rubble that hurts unless the shield is equipped. A bottle, a shield, a necklace and shoulder pads are collectables that change what the player can do.<br><br><b>Combat.</b> Robot and troll enemies run finite-state machines (search, engage, attack, stunned). The player can parry, and sand blown into the air stuns robots. Checkpoints, dialogue and animation-synced audio complete the loop.",
   equip:["Unity","C#","Blender","Mixamo","Substance","Reaper"], links:[["Play on itch.io","https://stevietheturtle.itch.io/windy-days"],["Watch trailer","https://www.youtube.com/watch?v=4hXyWJbp-4Y"]],
-  art:{shots:[{img:ITCH+"aW1nLzEyMTc4ODk0LmpwZw==/original/AThQMA.jpg",cap:"key art"},{img:"https://img.youtube.com/vi/4hXyWJbp-4Y/maxresdefault.jpg",cap:"gameplay"}],
+  art:{shots:[{yt:"4hXyWJbp-4Y",cap:"trailer"},{img:ITCH+"aW1nLzEyMTc4ODk0LmpwZw==/original/AThQMA.jpg",cap:"key art"}],
   says:["Will you get dragged away? Or will you fight against it?","Original soundtrack and SFX, composed in Reaper."]}},
- {id:"odeon", title:"Room Acoustics Study", t:2021.7, years:"Sep–Nov 2021", ctx:"Sound Engineering course · PoliTo", tags:["Sound"],
-  thumb:{plate:"odeon"}, role:"Solo project", crew:"Stefano Calzolari",
+ {id:"odeon", title:"Room Acoustics Study", t:2021.7, years:"Sep–Nov 2021", ctx:"Sound Engineering course · PoliTo", tags:["Audio"],
+  thumb:{img:"assets/odeon/room-treated.jpg"}, role:"Solo project", crew:"Stefano Calzolari",
   objective:"Diagnose the acoustics of my own bedroom in Turin, then design the cure.",
   method:"Room modelled in SketchUp, geometric acoustic simulation in ODEON Combined; real absorber, reflector and diffuser panels replicated in software to test the correction.",
-  equip:["SketchUp","ODEON Combined","Architectural acoustics"], links:[["Slides & report","https://drive.google.com/drive/folders/1fNx20Hb0WtjuxxsTZwf84SAIaiyFx9_v"]],
-  art:{plates:["odeon"], says:["Sound is a material too: it decides how a room feels to be in."]}},
+  equip:["SketchUp","ODEON Combined","Architectural acoustics"], links:[["Slides (PDF)","assets/odeon/odeon-slides.pdf"],["Report (PDF)","assets/odeon/odeon-report.pdf"]],
+  art:{shots:[{img:"assets/odeon/room-sketchup.jpg",cap:"SketchUp model"},{img:"assets/odeon/room-real.jpg",cap:"the room, as it is"},{img:"assets/odeon/odeon-model.jpg",cap:"ODEON model with source and receiver"},{img:"assets/odeon/reverb-times.png",cap:"reverberation time by band"},{img:"assets/odeon/decay-curves.png",cap:"sound decay curves"},{img:"assets/odeon/spl-maps.png",cap:"sound pressure maps"},{img:"assets/odeon/reflectogram.jpg",cap:"reflectogram"},{img:"assets/odeon/panels-ceiling.jpg",cap:"ceiling absorbers"},{img:"assets/odeon/panels-wall.jpg",cap:"wall panels"},{img:"assets/odeon/room-treated.jpg",cap:"the treated room"}], says:["Sound is a material too: it decides how a room feels to be in."]}},
  {id:"strategy", title:"Digital Strategy — Lijoi Liuteria", t:2021.8, years:"Oct 2021 – Jan 2022", ctx:"Digital strategy project", tags:["Strategy"],
-  thumb:{plate:"strategy"}, role:"Strategy & content design", crew:"Stefano Calzolari",
-  objective:"Give a local violin-making workshop a digital voice.",
-  method:"Sector and target study, marketing and communication goals, touchpoint map, content and social calendar with mockups, KPIs and measurement plan.",
-  equip:["Market research","Content strategy","Social calendar","Mockups"], links:[["Read the strategy (PDF)","https://drive.google.com/file/d/1HqFJXwKCPf1zHdXBRMGT0_R_1Hp3mXZu/view"]],
-  art:{plates:["strategy"], says:["A violinist writing for a violin maker.","Mockup pages coming soon."]}},
+  thumb:{img:"assets/strategy/site-audit.jpg"}, role:"Strategy & content design", crew:"Team of five: Arrigo, Calzolari, Donalisio, Kamyar, Roletto",
+  objective:"Give a young violin-making workshop in Savigliano (Cuneo) a digital voice: the luthier ran every touchpoint alone, had no communication budget and almost no online reviews.",
+  method:"<b>Where we are.</b> Audit of the website (desktop 94/100, mobile 35/100 on PageSpeed), Facebook, Instagram and Google My Business, plus a competitor map on market reach against service specialisation.<br><br><b>Where to go.</b> Six goals: better audio-video, a clear brand identity built on the luthier's academic training, a stronger reputation, at least +100% traffic, loyalty, and more sales. Targets came from the BOA2RD method and user personas, with a key concept: tradition and modernity in one instrument.<br><br><b>How to get there.</b> A buy-cycle and funnel (TOFU, MOFU, BOFU, flywheel), touchpoint fixes, three budget packages, an editorial plan with recurring columns (#TavoloDelLiutaio, #VoceAlleCorde), ADV, influencers and a contingency plan, and KPIs per goal.",
+  readout:[["70","pages (in Italian)"],["3","budget packages"],["+100%","traffic goal"]],
+  equip:["Market research","Competitor mapping","BOA2RD","User personas","Funnel & flywheel","Editorial calendar","Mockups","KPIs"], links:[["Read the strategy (PDF, Italian)","assets/strategy/strategy.pdf"]],
+  art:{shots:[{img:"assets/strategy/site-audit.jpg",cap:"website audit"},{img:"assets/strategy/competitor-map.jpg",cap:"competitor map: reach vs specialisation"},{img:"assets/strategy/user-personas.jpg",cap:"user personas"},{img:"assets/strategy/editorial-plan.jpg",cap:"editorial plan: #LeTradizioniDelMestiere"},{img:"assets/strategy/post-mockups.jpg",cap:"post mockups"},{img:"assets/strategy/editorial-calendar.jpg",cap:"ad mockups"}],
+   says:["A violinist writing for a violin maker.","Done as a group project for a real client. The full strategy is in Italian."]}},
  {id:"t2a", title:"From Words to Emotions — Text2Anim", t:2024.9, years:"2024–2025", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","Animation"],
-  thumb:{video:T2A+"LADiff_Anger_Walking.mp4"}, role:"Lead researcher, with MSc student Ciro Annicchiarico", crew:"S. Calzolari, C. Annicchiarico, F. Strada, A. Bottino",
-  objective:"Can AI-generated body language make a virtual human's emotions believable?",
-  method:"A Unity tool turns text prompts into humanoid animation through LADiff, MDM and T2M-GPT. The generated clips were evaluated by 39 participants across six basic emotions and three actions.",
-  result:"Anger and sadness are the most recognisable from body language alone.", readout:[["39","participants"],["6","emotions"],["4","models"]],
-  pub:"Springer LNCS 15742 · XR Salento 2025", equip:["Unity 6","Python","CUDA","LADiff","MDM","T2M-GPT"],
+  thumb:{video:T2A+"Muse_Anger_Walking.mp4"}, role:"Lead researcher, with MSc student Ciro Annicchiarico", crew:"S. Calzolari, C. Annicchiarico, F. Strada, A. Bottino",
+  objective:"Can AI-generated body language make a virtual human's emotions believable? We asked people to name the emotion in clips made by four text-to-motion models.",
+  method:"<b>Dataset.</b> Four off-the-shelf text-to-motion models (LADiff, MDM, T2M-GPT, Muse Animate), six basic emotions and three everyday actions: standing, speaking, walking. Prompts were refined from body-language research, for example \"a person walks slowly with head tilted down\", and checked with a 21-person pre-survey (prompt coherence 5.13 on a 7-point scale).<br><br><b>Pipeline.</b> Python generates the motion, an IK solver rebuilds the skeleton, Blender converts it, and Unity renders every clip on the same mannequin, camera and background, so only the movement differs.<br><br><b>User study.</b> Participants watched randomised clips, picked one of six emotions and rated how hard the choice was. 39 people took part and 33 finished, for 2,376 votes.<br><br><b>Findings.</b> Anger (0.74) and sadness (0.72) read clearly from the body alone. Happiness (0.55) and fear (0.52) are moderate. Surprise (0.31) and disgust (0.14) need a face or context. The models differ: MDM was the steadiest across emotions, while LADiff collapsed fear into sadness when speaking.",
+  result:"Anger and sadness are the most recognisable from body language alone; disgust and surprise are the hardest.", readout:[["39","participants"],["2,376","emotion votes"],["6×3×4","emotions, actions, models"]],
+  pub:"Springer LNCS 15742 · XR Salento 2025", equip:["Unity 6","Python","Blender","IK solver","LADiff","MDM","T2M-GPT","Muse Animate"],
   links:[["Paper (DOI)","https://doi.org/10.1007/978-3-031-97778-7_9"],["Tool on GitHub","https://github.com/CGVGroup/VH_Text2Anim_Generator"]],
-  art:{shots:[{video:T2A+"LADiff_Anger_Walking.mp4",cap:"anger · walking"},{video:T2A+"LADiff_Sadness_Standing.mp4",cap:"sadness · standing"},{video:T2A+"LADiff_Happiness_Walking.mp4",cap:"happiness · walking"}],
-  says:["Same walk, six different emotions. Body language is a medium."]}},
- {id:"sia", title:"SIA Bar", t:2025.0, years:"2024–2025", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"], status:"WIP · classified",
-  thumb:{plate:"sia"}, role:"[redacted]", crew:"[redacted]", redact:"Virtual-human customers with a full agent cycle, animated with Motion Matching and custom IK.",
-  objective:"A VR bar populated by socially interactive virtual humans.", method:"Full details coming soon.",
-  equip:["Unity","VR","Virtual humans"], links:[], art:{plates:["sia"], says:["Top secret… for now."]}},
- {id:"adamo", title:"ADAMO", t:2025.3, years:"2025", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"],
-  thumb:{plate:"adamo"}, role:"Researcher, with Alessandro Pecora", crew:"CGVGroup",
-  objective:"Virtual humans that take a sentence and act on it in a 3D world.",
-  method:"Hybrid architecture: a Unity runtime (Motion Matching, Final IK) and a Python cognitive server. A vision-language model runs a Thought → Act → Observe loop with multimodal short-term memory, benchmarked on a capability × difficulty taxonomy.",
-  pub:"Publication forthcoming [link placeholder]", equip:["Unity 6","Python","FastAPI","LangChain","VLMs","Motion Matching"],
-  links:[["Framework on GitHub","https://github.com/CGVGroup/ADAMO"]], art:{plates:["adamo"], says:["Media coming soon!"]}},
- {id:"incare", title:"InCare", t:2026.4, years:"2026", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"], status:"WIP · classified",
+  art:{shots:[{video:T2A+"Muse_Anger_Walking.mp4",cap:"Muse · walking · anger"},{video:T2A+"Muse_Sadness_Walking.mp4",cap:"Muse · walking · sadness"},{video:T2A+"MDM_Happiness_Walking.mp4",cap:"MDM · walking · happiness"},{img:"assets/t2a/pipeline.jpg",cap:"dataset pipeline: text prompt to Unity video"},{img:"assets/t2a/survey.jpg",cap:"the survey interface"},{img:"assets/t2a/accuracy-by-emotion.jpg",cap:"recognition accuracy by emotion"},{img:"assets/t2a/confusion-matrix.jpg",cap:"which emotions get confused"},{img:"assets/t2a/models-radar.jpg",cap:"accuracy by model and emotion"}],
+  says:["The clips from the conference talk: same mannequin, same camera, different model, action and emotion. Can you tell which is which?"]}},
+ {id:"sia", title:"Psychotherapy BarVR", t:2025.0, years:"2024–2025", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"],
+  thumb:{img:"assets/sia/bar-lounge.png"}, role:"Researcher & Unity developer", crew:"CGVGroup",
+  objective:"A VR therapy environment for social anxiety and agoraphobia: a busy café where patients can practise everyday social situations, step by step, in a safe and controllable setting.",
+  method:"<b>The scene.</b> A VR bar built in Unity (URP, XR Interaction Toolkit), populated by virtual customers. The player follows the same routine as everyone else: order at the kiosk, wait for their number, pick up the drink.<br><br><b>The crowd.</b> Every virtual customer runs a full agent cycle: join the queue, order, wait, collect, then sit or chat. Agents are animated with Motion Matching and custom aim IK, with layered animation actions, positional audio and an event-driven framework.<br><br><b>The data.</b> An in-game logger records each session, including the distance to nearby virtual humans, for later analysis.",
+  equip:["Unity URP","XR Interaction Toolkit","C#","Motion Matching","Aim IK","Behavior graphs","Python"],
+  links:[], art:{shots:[{video:"assets/sia/bar.mp4",cap:"the bar, in motion"},{img:"assets/sia/bar-lounge.png",cap:"lounge area"},{img:"assets/sia/bar-counter.png",cap:"at the counter"},{img:"assets/sia/bar-phone.png",cap:"customer on the phone"}],
+   says:["Every customer has somewhere to be: queue, order, wait, collect, sit.","Paper coming soon."]}},
+ {id:"adamo", title:"A.D.A.M.O.", t:2025.3, years:"2025–2026", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"],
+  thumb:{img:"assets/adamo/agent-view.jpg"}, role:"Researcher, joint first author with Alessandro Pecora", crew:"A. Pecora, S. Calzolari, F. Strada, A. Bottino",
+  objective:"Virtual humans that take a sentence and act on it in a 3D world: perceive, reason and act in one loop, driven by a vision-language model.",
+  method:"<b>The loop.</b> A Perceive–Reason–Act cycle built on ReAct. The agent sees an egocentric frame with labelled bounding boxes and reference points, plus a synchronised symbolic state (objects, positions, volumes, its own pose). A pretrained VLM writes a short reasoning note, then calls one tool: Look, Walk, Pick or Drop. A multimodal short-term memory keeps the recent frames, reasoning and tool results in one prompt.<br><br><b>The system.</b> A Unity runtime renders the world and executes actions through an embedded action server. A Python cognitive server builds prompts, updates memory and queries the VLM. The engine enforces physics, so an out-of-reach target triggers an automatic walk closer.<br><br><b>The test.</b> 15 episodes in two scenes (a tabletop and a living room) with the same 19 objects, from “pick the plate” to “pick all objects that have a printed product label”. Each task gets a Capability–Difficulty score: actions, references and spatial relations. GPT-4o and Claude Sonnet 3.5 were each run 15 times per episode.<br><br><b>Findings.</b> Semantic labels matter most: completion rose from 0.48 to 0.88 with GPT-4o and from 0.38 to 0.83 with Claude Sonnet 3.5. Without them, most failures are perceptual (83.5%); with them, failures shift to execution, and reasoning errors stay rare (2–3%).",
+  result:"Naming objects semantically nearly doubles task completion.", readout:[["0.88","completion with semantic labels"],["15","episodes, 2 scenes"],["19","objects to pick and place"]],
+  pub:"arXiv:2609.35463 · Sep 2026", equip:["Unity 6","Python","VLMs","GPT-4o","Claude Sonnet","Tool calling","C-D taxonomy"],
+  links:[["Paper on arXiv","https://arxiv.org/abs/2609.35463"],["Framework on GitHub","https://github.com/CGVGroup/ADAMO"]], art:{shots:[{video:"assets/adamo/demo.mp4",cap:"a live run: “Pick the blue object and place it near the plant”"},{img:"assets/adamo/agent-view.jpg",cap:"what the agent sees: labelled boxes and reference points"},{img:"assets/adamo/architecture.jpg",cap:"the Perceive–Reason–Act loop"},{img:"assets/adamo/tool-log.jpg",cap:"the agent reasoning and calling tools"},{img:"assets/adamo/pick-and-place.jpg",cap:"picking"},{img:"assets/adamo/carrying.jpg",cap:"carrying the object"},{img:"assets/adamo/scene-gizmos.jpg",cap:"the scene with object and reference gizmos"},{img:"assets/adamo/scene-objects.jpg",cap:"the 19 interactable objects"},{img:"assets/adamo/infrastructure.jpg",cap:"Unity, Python and the VLM server"},{img:"assets/adamo/benchmark-scenes.jpg",cap:"the two benchmark scenes"},{img:"assets/adamo/completion-rate.jpg",cap:"completion rate per task"}],
+  says:["“Pick the key and place it near the plant.” The agent walks, looks, reasons and picks, one tool at a time.","Shown at 10× speed in the clip."]}},
+ {id:"incare", title:"InCare", t:2026.4, years:"2026", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"], status:"WIP",
   thumb:{plate:"incare"}, role:"[redacted]", crew:"[redacted]", redact:"Multi-agent reasoning, emotional state model, didactic feedback loop.",
   objective:"VR training with an LLM-driven virtual patient for healthcare communication.", method:"Full details coming soon.",
   equip:["Unity","VR","LLM agents"], links:[], art:{plates:["incare"], says:["Top secret… for now."]}},
  {id:"llmedu", title:"LLM Education", t:2026.2, years:"2026", ctx:"Teaching material · PUCRS, Porto Alegre", tags:["AI","Teaching"],
-  thumb:{plate:"llm"}, role:"Author, for a TCC (undergraduate thesis) student", crew:"Stefano Calzolari",
+  thumb:{plate:"llm3"}, role:"Author, for a TCC (undergraduate thesis) student", crew:"Stefano Calzolari",
   objective:"Take a student from zero to multi-node LLM workflows.",
   method:"Four self-contained LangGraph modules of rising difficulty: chatbot with memory → structured output → RAG → research agent with parallel fan-out/fan-in and live API grounding. Runs on local models via Ollama.",
   readout:[["4","modules"],["0","cloud keys needed"]], equip:["Python","LangGraph","LangChain","Ollama","Pydantic"],
-  links:[["Course on GitHub","https://github.com/stevieTheTurtle/LLM_Education"]], art:{plates:["llm"], says:["Teaching is design: every module ships a guide and a graph you can step through."]}},
+  links:[["Course on GitHub","https://github.com/stevieTheTurtle/LLM_Education"]], art:{wide:1, shots:[{plate:"llm0",cap:"module 0 · chatbot with memory"},{plate:"llm1",cap:"module 1 · structured output"},{plate:"llm2",cap:"module 2 · simple RAG"},{plate:"llm3",cap:"module 3 · research workflow"},{plate:"llmcode",cap:"the whole idea, in code"}], says:["Teaching is design: every module ships a guide and a graph you can step through."]}},
 ];
 [...P].sort((a,b)=>a.t-b.t).forEach((p,i)=>p.no=String(i+1).padStart(2,"0"));
 
@@ -580,15 +604,29 @@ function plate(kind){
     case "adamo":{const c=[[100,70,"THINK"],[220,70,"ACT"],[160,150,"OBSERVE"]];
       return wrap(`<g ${s}>${c.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="30"/>`).join("")}<path d="M132 64 L186 64 M204 98 L178 126 M140 128 L112 100" ${H}/></g>${c.map(([x,y,t])=>txt(x,y+3,t,"middle")).join("")}${txt(12,190,"VLM · THOUGHT–ACT–OBSERVATION LOOP")}`,"ADAMO loop");}
     case "incare":
-      return wrap(`<defs><pattern id="hz" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz)"/><g ${s}><circle cx="160" cy="80" r="24"/><path d="M116 170c6-38 82-38 88 0"/></g><g transform="rotate(-10 160 110)" style="color:var(--stamp-red)"><rect x="70" y="92" width="180" height="36" rx="3" fill="none" stroke="currentColor" stroke-width="3"/>${txt(160,116,"CLASSIFIED · WIP","middle",800,14)}</g>`,"InCare classified");
+      return wrap(`<defs><pattern id="hz" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz)"/><g ${s}><circle cx="160" cy="80" r="24"/><path d="M116 170c6-38 82-38 88 0"/></g><g transform="rotate(-10 160 110)"><defs><pattern id="wipTape" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" fill="#FFC928"/><rect width="8" height="16" fill="#1B1B2F"/></pattern></defs><rect x="-60" y="90" width="440" height="40" fill="url(#wipTape)" stroke="#1B1B2F" stroke-width="3"/><rect x="-60" y="99" width="440" height="22" fill="#FFC928" stroke="#1B1B2F" stroke-width="3"/><text x="160" y="115" text-anchor="middle" fill="#1B1B2F" style="font:800 13px var(--f-body);letter-spacing:.18em">WORK IN PROGRESS</text></g>`,"InCare work in progress");
     case "sia":
-      return wrap(`<defs><pattern id="hz2" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz2)"/><g ${s}><path d="M130 50h60l-30 46z"/><path d="M160 96v50M136 146h48"/><path d="M60 170h200"/></g><g transform="rotate(-10 160 110)" style="color:var(--stamp-red)"><rect x="70" y="92" width="180" height="36" rx="3" fill="none" stroke="currentColor" stroke-width="3"/>${txt(160,116,"CLASSIFIED · WIP","middle",800,14)}</g>`,"SIA Bar classified");
+      return wrap(`<defs><pattern id="hz2" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz2)"/><g ${s}><path d="M130 50h60l-30 46z"/><path d="M160 96v50M136 146h48"/><path d="M60 170h200"/></g><g transform="rotate(-10 160 110)"><defs><pattern id="wipTape" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" fill="#FFC928"/><rect width="8" height="16" fill="#1B1B2F"/></pattern></defs><rect x="-60" y="90" width="440" height="40" fill="url(#wipTape)" stroke="#1B1B2F" stroke-width="3"/><rect x="-60" y="99" width="440" height="22" fill="#FFC928" stroke="#1B1B2F" stroke-width="3"/><text x="160" y="115" text-anchor="middle" fill="#1B1B2F" style="font:800 13px var(--f-body);letter-spacing:.18em">WORK IN PROGRESS</text></g>`,"Psychotherapy BarVR work in progress");
     case "odeon":{let r="";[[250,40,300,120],[300,60,180,190],[150,30,20,90],[300,150,120,190],[20,170,110,30]].forEach(([a,b,c,d],i)=>{r+=`<polyline points="70,140 ${a},${b} ${c},${d}" ${i%2?H:""} opacity=".85"/>`});
       return wrap(`<g ${s}><rect x="20" y="30" width="280" height="160"/><rect x="250" y="120" width="40" height="60" opacity=".6"/><path d="M28 60v40M34 60v40M40 60v40" ${H}/>${r}<circle cx="70" cy="140" r="5" fill="currentColor"/></g>${txt(26,24,"BEDROOM · T30 / C80 ANALYSIS")}`,"Acoustic rays");}
     case "strategy":
       return wrap(`<g ${s}>${[26,52,78].map(r=>`<circle cx="160" cy="100" r="${r}" opacity="${1-r/140}"/>`).join("")}<path d="M160 70c-10 8 10 22 0 30s10 22 0 30" ${H} stroke-width="2"/><circle cx="238" cy="100" r="4" fill="currentColor"/><circle cx="104" cy="45" r="4" fill="currentColor"/><circle cx="110" cy="160" r="4" fill="currentColor"/></g>${txt(246,104,"SOCIAL")}${txt(40,40,"WEBSITE")}${txt(40,176,"WORKSHOP")}${txt(160,194,"TOUCHPOINT MAP","middle")}`,"Touchpoint map");
-    case "llm":{const n=[[40,100,"START"],[110,100,"PLAN"],[190,50,"SEARCH"],[190,100,"RAG"],[190,150,"API"],[270,100,"WRITE"]],e=[[0,1],[1,2],[1,3],[1,4],[2,5],[3,5],[4,5]];
-      return wrap(`<g ${s}>${e.map(([a,b])=>`<line x1="${n[a][0]}" y1="${n[a][1]}" x2="${n[b][0]}" y2="${n[b][1]}" ${a===1||b===5?H:""}/>`).join("")}${n.map(([x,y])=>`<rect x="${x-28}" y="${y-12}" width="56" height="24" rx="3" fill="var(--paper)"/>`).join("")}</g>${n.map(([x,y,t])=>txt(x,y+3,t,"middle")).join("")}${txt(12,190,"LANGGRAPH · FAN-OUT / FAN-IN")}`,"LangGraph workflow");}
+    case "llm0": case "llm1": case "llm2": case "llm3": case "llmcode":{
+      if(kind==="llmcode"){const L=["from langgraph.graph import StateGraph","","g = StateGraph(State)","g.add_node(\"chat\", chat)","g.add_edge(START, \"chat\")","g.add_edge(\"chat\", END)","app = g.compile()"];
+        return wrap(`<g ${s}><rect x="14" y="22" width="292" height="150" rx="3"/></g>${L.map((l,i)=>`<text x="26" y="${46+i*18}" fill="${i>=3&&i<=5?"var(--accent)":"currentColor"}" xml:space="preserve" style="font:500 10.5px ui-monospace,Consolas,monospace">${l}</text>`).join("")}${txt(12,190,"A GRAPH IN SIX LINES")}`,"LangGraph code");}
+      const G={
+        llm0:{cap:"MODULE 0 · BASICS · CHATBOT + MEMORY",n:{a:[8,95,"",8],b:[160,95,"chat",90],c:[312,95,"",8]},e:[["a","b"],["b","c"]],note:[[160,140,"state: messages (add_messages)"]]},
+        llm1:{cap:"MODULE 1 · STRUCTURED OUTPUT",n:{a:[8,80,"",8],b:[160,80,"extract",96],c:[312,80,"",8],d:[160,150,"MovieReview|Pydantic schema",170]},e:[["a","b"],["b","c"],["b","d",1]],note:[]},
+        llm2:{cap:"MODULE 2 · SIMPLE RAG",n:{a:[8,95,"",8],b:[68,95,"parse|query",66],c:[158,95,"fetch|papers",66],d:[250,95,"summarize",84],e:[312,95,"",8]},e:[["a","b"],["b","c"],["c","d"],["d","e"]],note:[[160,145,"retrieve, then generate"]]},
+        llm3:{cap:"MODULE 3 · WORKFLOW · FAN-OUT / FAN-IN",n:{a:[5,112,"",8],b:[42,112,"check|intent",60],c:[112,112,"parse|city",52],w:[187,78,"fetch|weather",66],g:[187,146,"fetch|geo",66],f:[264,112,"final|answer",58],e:[314,112,"",8],p:[187,30,"casual|response",74],q:[314,30,"",8]},e:[["a","b"],["b","p",1],["p","q"],["b","c"],["c","w"],["c","g"],["w","f"],["g","f"],["f","e"]],note:[[58,62,"not a city"]]}}[kind];
+      const N=G.n, fs=12;
+      const box=([x,y,t,w])=>{if(w===8)return `<circle cx="${x}" cy="${y}" r="4.5" fill="currentColor"/>`;
+        const L=t.split("|"), lab=L.length>1?`<text text-anchor="middle" fill="currentColor" style="font:500 ${fs}px var(--f-body)"><tspan x="${x}" y="${y-2}">${L[0]}</tspan><tspan x="${x}" y="${y+12}">${L[1]}</tspan></text>`:`<text x="${x}" y="${y+4.5}" text-anchor="middle" fill="currentColor" style="font:500 ${fs+1}px var(--f-body)">${t}</text>`;
+        return `<rect x="${x-w/2}" y="${y-19}" width="${w}" height="38" rx="3" fill="var(--paper)" stroke="currentColor" stroke-width="1.4"/>${lab}`};
+      const edge=([a,b,dash])=>{const A=N[a],B=N[b],x1=A[0]+A[3]/2,x2=B[0]-B[3]/2,y1=A[1],y2=B[1];
+        if(a==="b"&&b==="d")return `<path d="M${A[0]} ${A[1]+19} V${B[1]-19}" ${H} stroke-dasharray="3 3"/>`;
+        return `<path d="M${x1} ${y1} L${x2-(B[3]===8?6:3)} ${y2}" ${dash?'stroke-dasharray="3 3" ':""}${H} marker-end="url(#llmArw)"/>`};
+      return wrap(`<defs><marker id="llmArw" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L6 3L0 6z" fill="currentColor"/></marker></defs><g ${s}>${G.e.map(edge).join("")}${Object.values(N).map(box).join("")}</g>${G.note.map(([x,y,t])=>`<text x="${x}" y="${y}" text-anchor="middle" fill="currentColor" style="font:500 10.5px var(--f-body)">${t}</text>`).join("")}${txt(12,192,G.cap,"start",600,9)}`,"LangGraph module "+kind);}
     case "tomato":
       return wrap(`<g ${s}><ellipse cx="160" cy="112" rx="62" ry="54"/><path d="M160 58c-8-14-24-14-30-8 14 0 20 6 30 8 10-2 16-8 30-8-6-6-22-6-30 8z" ${H}/><path d="M110 150 L150 128 L182 138 L214 112" ${H} stroke-dasharray="3 4"/>${[[110,150],[150,128],[182,138],[214,112]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="var(--paper)" ${H}/>`).join("")}<circle cx="142" cy="100" r="5" fill="currentColor"/><circle cx="178" cy="100" r="5" fill="currentColor"/></g>${txt(12,190,"RIG · IK CHAIN + BLENDSHAPES")}`,"Tomato rig");
   }
@@ -597,13 +635,13 @@ function plate(kind){
 {const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target; if(e.isIntersecting){const p=v.play(); p&&p.catch(()=>{})} else v.pause()}),{threshold:.1});
  const add=n=>{if(n.nodeType!==1)return; if(n.tagName==="VIDEO")io.observe(n); else n.querySelectorAll&&n.querySelectorAll("video").forEach(v=>io.observe(v))};
  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(add))).observe(document.documentElement,{childList:true,subtree:true}); document.querySelectorAll("video").forEach(v=>io.observe(v))}
-const media=m=>m.img?`<img src="${m.img}" alt="" loading="lazy">`:m.video?`<video src="${m.video}" muted loop playsinline preload="metadata"></video>`:plate(m.plate);
+const media=(m,c)=>m.drive?`<iframe src="https://drive.google.com/file/d/${m.drive}/preview" title="${m.cap}" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>`:m.yt&&!/^https?:$/.test(location.protocol)?`<a class="yt-fallback" href="https://www.youtube.com/watch?v=${m.yt}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${m.yt}/maxresdefault.jpg" alt="${m.cap} (opens YouTube)" loading="lazy"><span>▶ Watch on YouTube</span></a>`:m.yt?`<iframe src="https://www.youtube-nocookie.com/embed/${m.yt}" title="${m.cap}" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`:m.img?`<img src="${m.img}" alt="" loading="lazy">`:m.video?`<video src="${m.video}" muted loop playsinline preload="metadata"${c?" controls":""}></video>`:plate(m.plate);
 /* ---------- cards ---------- */
 const grid=document.getElementById("grid");
 P.forEach(p=>{
   const b=document.createElement("button"); b.type="button"; b.className="card"; b.dataset.id=p.id;
   b.setAttribute("aria-label",`Nº ${p.no}: ${p.title}, ${p.years}. Open entry.`);
-  b.innerHTML=`<div class="thumb">${media(p.thumb)}<span class="no">Nº ${p.no}</span>${p.status?`<span class="stamp">${p.status}</span>`:""}</div>
+  b.innerHTML=`<div class="thumb">${media(p.thumb)}<span class="no">Nº ${p.no}</span></div>
     <h3>${p.title}</h3><p class="meta">${p.years} · ${p.ctx}</p>
     <div class="tags lbl">${p.tags.map(t=>`<span>#${t}</span>`).join("")}</div>`;
   b.onclick=()=>openSpread(p.id);
@@ -611,7 +649,8 @@ P.forEach(p=>{
   ["mouseleave","blur"].forEach(ev=>b.addEventListener(ev,()=>hilite(p.id,false)));
   p.el=b;
 });
-const TAGS=["All",...new Set(P.flatMap(p=>p.tags))]; let activeTag="All";
+const TAG_ORDER=["XR","Games","Research","AI","Teaching","Audio","Animation","Strategy"], allTags=new Set(P.flatMap(p=>p.tags));
+const TAGS=["All",...TAG_ORDER.filter(t=>allTags.has(t)),...[...allTags].filter(t=>!TAG_ORDER.includes(t))]; let activeTag="All";
 const chips=document.getElementById("chips");
 TAGS.forEach(t=>{const c=document.createElement("button"); c.type="button"; c.className="chip"; c.textContent=t; c.setAttribute("aria-pressed",t===activeTag);
   c.onclick=()=>{activeTag=t; [...chips.children].forEach(x=>x.setAttribute("aria-pressed",x===c)); P.forEach(p=>{p.el.hidden=!visible(p); p.pin.hidden=!visible(p)}); layoutAxis();}; chips.appendChild(c);});
@@ -653,14 +692,13 @@ function openSpread(id){
   document.getElementById("spNo").textContent=`Nº ${p.no} · ${p.years}`;
   document.getElementById("spTitle").textContent=p.title;
   const red=t=>p.redact?`<span class="redacted">${t}</span>`:t;
-  const shots=p.art.shots?p.art.shots.map((m,i)=>`<figure class="shot ${i?"":"a"}">${media(m)}<figcaption>${m.cap}</figcaption></figure>`).join("")
+  const shots=p.art.shots?p.art.shots.map((m,i)=>`<figure class="shot ${i&&!p.art.wide?"":"a"}">${media(m,1)}<figcaption>${m.cap}</figcaption></figure>`).join("")
     :p.art.plates.map(k=>`<figure class="shot a">${plate(k)}<figcaption>Placeholder diagram · media coming</figcaption></figure>`).join("");
   document.getElementById("pageMedia").innerHTML=`
-    <h4>Gallery</h4><div class="gallery">${shots}</div>
+    <div class="gallery">${shots}</div>
     <div class="notes">${p.art.says.map(n=>`<p>${n}</p>`).join("")}</div>`;
   document.getElementById("pageInfo").innerHTML=`
-    <h4>Objective</h4><p class="objective">${p.objective}</p>
-    <h4>Method</h4><p>${p.redact?red(p.redact)+" "+p.method:p.method}</p>
+    <h4>About</h4><p>${p.objective}</p>${[...(p.redact?[red(p.redact)]:[]),...p.method.split("<br><br>")].map(t=>`<p>${t}</p>`).join("")}
     ${p.readout?`<h4>Readout</h4><div class="readout">${p.readout.map(([v,l])=>`<div><b>${v}</b>${l}</div>`).join("")}</div>`:""}
     ${p.result?`<h4>Finding</h4><p class="result">${p.result}</p>`:""}
     <h4>Tools</h4><div class="equip">${p.equip.map(e=>`<span>${e}</span>`).join("")}</div>
@@ -674,6 +712,22 @@ function openSpread(id){
 function closeSpread(){bg.hidden=true; document.body.style.overflow=""; lastFocus&&lastFocus.focus&&lastFocus.focus()}
 document.getElementById("spClose").onclick=closeSpread;
 bg.addEventListener("click",e=>{if(e.target===bg)closeSpread()});
+/* ---------- lightbox ---------- */
+const lb=document.createElement("div"); lb.id="lightbox"; lb.hidden=true; lb.setAttribute("role","dialog"); lb.setAttribute("aria-modal","true"); lb.setAttribute("aria-label","Image viewer");
+lb.innerHTML=`<button type="button" class="lb-close" aria-label="Close image">✕</button><button type="button" class="lb-nav prev" aria-label="Previous image">◀</button><div class="lb-stage"></div><button type="button" class="lb-nav next" aria-label="Next image">▶</button><p class="lb-cap"></p>`;
+document.body.appendChild(lb);
+const lbStage=lb.querySelector(".lb-stage"), lbCap=lb.querySelector(".lb-cap"); let lbItems=[], lbI=0;
+function lbShow(i){lbI=(i+lbItems.length)%lbItems.length; const f=lbItems[lbI], m=f.querySelector("img,svg");
+  lbStage.innerHTML=m.tagName==="IMG"?`<img src="${m.currentSrc||m.src}" alt="${m.alt||""}">`:m.outerHTML;
+  const c=f.querySelector("figcaption"); lbCap.textContent=c?c.textContent:""; lb.classList.toggle("single",lbItems.length<2);
+  lb.querySelectorAll(".lb-nav").forEach(b=>b.style.visibility=lbItems.length<2?"hidden":"")}
+function lbClose(){lb.hidden=true; lbStage.innerHTML=""}
+document.getElementById("pageMedia").addEventListener("click",e=>{
+  if(e.target.closest(".yt-fallback")||!e.target.closest("img,svg"))return; const f=e.target.closest(".shot"); if(!f)return;
+  lbItems=[...document.querySelectorAll("#pageMedia .shot")].filter(x=>x.querySelector("img,svg")&&!x.querySelector(".yt-fallback"));
+  lbShow(lbItems.indexOf(f)); lb.hidden=false; lb.querySelector(".lb-close").focus()});
+lb.addEventListener("click",e=>{ if(e.target.closest(".lb-close")||e.target===lb||e.target===lbStage)lbClose(); else if(e.target.closest(".prev"))lbShow(lbI-1); else if(e.target.closest(".next"))lbShow(lbI+1)});
+document.addEventListener("keydown",e=>{ if(lb.hidden)return; e.stopPropagation(); if(e.key==="Escape")lbClose(); else if(e.key==="ArrowRight")lbShow(lbI+1); else if(e.key==="ArrowLeft")lbShow(lbI-1)},true);
 document.addEventListener("keydown",e=>{
   if(!bg.hidden){ if(e.key==="Escape")closeSpread(); if(e.key==="ArrowRight")document.getElementById("spNext").click(); if(e.key==="ArrowLeft")document.getElementById("spPrev").click(); return; }
 });
@@ -879,12 +933,18 @@ render(false); syncThemeBtn();
   let starsOn=false, hintT=0;
   // place a star's orbit phase so it appears >=160px from the pointer (never pops in under the cursor)
   const sp=new THREE.Vector3();
+  // also keeps >=1.1rad of orbit away from every other live star (all share one radius + angular speed, so phase gap = fixed gap)
   function safePhase(k,phase,t){
-    if(!hover)return phase;
-    for(let i=0;i<12;i++){const a=phase+i*Math.PI/6+t*.5, OR=orbitR();
+    const free=p=>stars.every((o,j)=>{if(j===k||!o.userData.alive)return true;
+      const d=Math.abs(((p-o.userData.phase)%(Math.PI*2)+Math.PI*3)%(Math.PI*2)-Math.PI); return d>1.1});
+    let best=null;
+    for(let i=0;i<24;i++){const p=phase+i*Math.PI/12; if(!free(p))continue;
+      if(best===null)best=p;
+      if(!hover)return p;
+      const a=p+t*.5, OR=orbitR();
       sp.set(Math.cos(a)*OR,.35+Math.sin(t*1.7+k)*.22+Math.sin(a)*.35,Math.sin(a)*OR).project(cam);
-      const sx=(sp.x+1)/2*W, sy=(1-sp.y)/2*H; if(Math.hypot(sx-px,sy-py)>160)return phase+i*Math.PI/6}
-    return phase} const orbitR=()=>Math.max(2.3, 1.76*(1+.1*P.bounce)+.28+.1);  // > furthest vertex x bounce scale + star size + margin
+      const sx=(sp.x+1)/2*W, sy=(1-sp.y)/2*H; if(Math.hypot(sx-px,sy-py)>160)return p}
+    return best===null?phase:best} const orbitR=()=>Math.max(2.3, 1.76*(1+.1*P.bounce)+.28+.1);  // > furthest vertex x bounce scale + star size + margin
 
   /* --- layout / interaction --- */
   const ovArt=document.getElementById("ovArt"), ovSci=document.getElementById("ovSci"), seam=document.getElementById("seam"), seamHint=document.getElementById("seamHint"), pin=document.getElementById("coverPin");
@@ -991,7 +1051,7 @@ render(false); syncThemeBtn();
   }
   setTimeout(()=>say("Psst… poke my head!"),600);
   function addCoin(){coinsN++; coinN.textContent="× "+String(coinsN).padStart(2,"0"); coins.classList.remove("pop"); void coins.offsetWidth; coins.classList.add("pop")}
-  function tryCatch(){ray.setFromCamera(ndc,cam); for(const s of stars){ if(!s.userData.alive||s.userData.spawn<1||s.userData.grace>0)continue; if(ray.intersectObject(s,true).length){ s.userData.alive=false; s.visible=false; s.userData.t=0; pop(s.position,46,4.2); addCoin(); popSound(coinsN);
+  function tryCatch(){ray.setFromCamera(ndc,cam); const headHit=ray.intersectObject(A.root,true); for(const s of stars){ if(!s.userData.alive||s.userData.spawn<1||s.userData.grace>0)continue; const hs=ray.intersectObject(s,true); if(hs.length&&!(headHit.length&&headHit[0].distance<hs[0].distance)){ s.userData.alive=false; s.visible=false; s.userData.t=0; pop(s.position,46,4.2); addCoin(); popSound(coinsN);
       say(coinsN%5===0?`${coinsN} stars! Science can wait.`:["Nice catch!","Yahoo!","+1 star","Keep going!"][coinsN%4]); return true } } return false}
   // aim: project the pointer onto a plane in front of the face, then yaw/pitch the head toward it
   let hover=false, hoverAmt=0, aimYaw=0, aimPitch=0; const aimPlane=new THREE.Plane(new THREE.Vector3(0,0,1),-2.6), aimPt=new THREE.Vector3(), HEAD_C=new THREE.Vector3(0,-.25,0);
@@ -1117,7 +1177,7 @@ render(false); syncThemeBtn();
      bubble.scale.setScalar(sc*bm); bubble.rotation.z=Math.sin(t*.9)*.03;
      if(!starsOn&&bubbleOut>=1&&bubbleText){hintT=(hintT||0)+dt; if(hintT>4){hintT=0; say("Psst… poke my head!")}}}
     stars.forEach((s,k)=>{const u=s.userData; if(!starsOn)return;
-      if(!u.alive){u.t+=dt; if(u.t>2.5){u.alive=true; s.visible=true; u.phase=safePhase(k,u.phase+1.3,t); u.spawn=0; u.grace=.5}}
+      if(!u.alive){u.t+=dt; if(u.t>2.5){u.phase=safePhase(k,u.phase+1.3,t); u.alive=true; s.visible=true; u.spawn=0; u.grace=.5}}
       if(u.spawn<1)u.spawn=Math.min(1,u.spawn+dt*2.4); else if(u.grace>0)u.grace-=dt;
       const e=Math.max(0,u.spawn), a=u.phase+t*.5;
       // circular orbit around the head centre, always clear of the model; stars appear in place (scale pop only)
