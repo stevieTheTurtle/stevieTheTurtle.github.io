@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stefano Calzolari</title>
+<meta name="description" content="Stefano Calzolari, interactive media researcher: virtual humans, XR, AI agents and animation. A portfolio of science and art.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stefano Calzolari · Interactive Media Researcher">
+<meta property="og:description" content="Virtual humans, XR, AI agents and animation. Explore my work as science or as art.">
+<meta property="og:url" content="https://stevietheturtle.github.io/">
+<meta property="og:image" content="https://stevietheturtle.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://stevietheturtle.github.io/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -199,6 +209,10 @@ a{color:inherit}
 /* ---------- Spread (one cohesive sheet) ---------- */
 .spread-bg{position:fixed; inset:0; z-index:50; background:rgba(8,12,14,.55); backdrop-filter:blur(3px); display:grid; place-items:center; padding:max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom))}
 .spread{position:relative; width:min(1180px, 100%); max-height:100%; overflow:auto; background:var(--paper-2); box-shadow:0 30px 80px -20px rgba(0,0,0,.55); border:1px solid var(--ink); animation:open .35s cubic-bezier(.2,.8,.2,1)}
+.spread,.page.media,.page.info{scrollbar-color:#fff #1A2023}
+.spread::-webkit-scrollbar,.page.media::-webkit-scrollbar,.page.info::-webkit-scrollbar{width:12px; height:12px}
+.spread::-webkit-scrollbar-track,.page.media::-webkit-scrollbar-track,.page.info::-webkit-scrollbar-track{background:#1A2023}
+.spread::-webkit-scrollbar-thumb,.page.media::-webkit-scrollbar-thumb,.page.info::-webkit-scrollbar-thumb{background:#fff; border:3px solid #1A2023; border-radius:8px}
 @keyframes open{from{opacity:0; transform:translateY(16px) scale(.985)}}
 .spread-top{position:sticky; top:0; z-index:2; display:flex; gap:10px 18px; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--grid-strong); background:var(--paper-2); flex-wrap:wrap}
 .spread-top .title{display:flex; align-items:baseline; gap:12px; min-width:0; flex-wrap:wrap}
@@ -210,8 +224,8 @@ a{color:inherit}
 @media (min-width: 901px){
   .spread{display:flex; flex-direction:column; height:100%; overflow:hidden}
   .pages{flex:1; min-height:0}
-  .page.media{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:var(--grid-strong) transparent}
-  .page.info{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:var(--grid-strong) transparent}
+  .page.media{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:auto}
+  .page.info{overflow-y:auto; overscroll-behavior:contain; scrollbar-width:auto}
 }
 .page{padding:26px 32px 34px; min-width:0}
 .page.media{border-right:1px solid var(--grid-strong); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px}
@@ -238,11 +252,12 @@ a{color:inherit}
 .shot{position:relative; margin:0; padding:6px; background:var(--paper-2); border:1px solid var(--grid-strong)}
 .shot.a{grid-column:1 / -1}
 .shot img, .shot video, .shot svg, .shot iframe{width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--paper)}
+.shot img.fit{aspect-ratio:auto; height:auto; max-height:560px; object-fit:contain}
 .shot iframe{border:0; aspect-ratio:16/9; display:block}
 #lightbox{position:fixed; inset:0; z-index:80; background:rgba(5,8,10,.93); display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-rows:minmax(0,1fr) auto; align-items:center; gap:12px; padding:max(16px,env(safe-area-inset-top)) 16px 16px}
 #lightbox[hidden]{display:none}
-#lightbox .lb-stage{grid-column:2; grid-row:1; width:100%; height:100%; display:grid; place-items:center; min-width:0; min-height:0}
-#lightbox .lb-stage img, #lightbox .lb-stage svg{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; background:none}
+#lightbox .lb-stage{grid-column:2; grid-row:1; width:100%; height:100%; display:grid; grid-template:minmax(0,1fr) / minmax(0,1fr); place-items:center; min-width:0; min-height:0; overflow:hidden}
+#lightbox .lb-stage img, #lightbox .lb-stage svg{max-width:100%; max-height:100%; min-height:0; width:auto; height:auto; object-fit:contain; background:none}
 #lightbox .lb-stage svg{width:min(100%,160vh); aspect-ratio:16/10}
 #lightbox .lb-cap{grid-column:2; grid-row:2; margin:0; text-align:center; color:#dfe7ea; font:600 .75rem/1.3 var(--f-body); letter-spacing:.12em; text-transform:uppercase}
 #lightbox button{background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.25); font:600 1rem/1 var(--f-body); padding:12px 14px; cursor:pointer}
@@ -567,6 +582,15 @@ const P=[
   links:[["Paper (DOI)","https://doi.org/10.1007/978-3-031-97778-7_9"],["Tool on GitHub","https://github.com/CGVGroup/VH_Text2Anim_Generator"]],
   art:{shots:[{video:T2A+"Muse_Anger_Walking.mp4",cap:"Muse · walking · anger"},{video:T2A+"Muse_Sadness_Walking.mp4",cap:"Muse · walking · sadness"},{video:T2A+"MDM_Happiness_Walking.mp4",cap:"MDM · walking · happiness"},{img:"assets/t2a/pipeline.jpg",cap:"dataset pipeline: text prompt to Unity video"},{img:"assets/t2a/survey.jpg",cap:"the survey interface"},{img:"assets/t2a/accuracy-by-emotion.jpg",cap:"recognition accuracy by emotion"},{img:"assets/t2a/confusion-matrix.jpg",cap:"which emotions get confused"},{img:"assets/t2a/models-radar.jpg",cap:"accuracy by model and emotion"}],
   says:["The clips from the conference talk: same mannequin, same camera, different model, action and emotion. Can you tell which is which?"]}},
+ {id:"facs", title:"The Quest for Believable Faces — FACS", t:2024.45, years:"2024–2026", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","Animation"],
+  thumb:{img:"assets/facs/top-expressions.jpg"}, role:"Lead researcher", crew:"S. Calzolari, F. Strada, A. Bottino",
+  objective:"Is there one set of blendshape weights that makes an emotion believable on every virtual human, or does it depend on the character?",
+  method:"<b>Setup.</b> Facial Action Coding System (FACS) breaks an expression into action units (AUs), each with an intensity. Each emotion uses the AUs from EMFACS (happiness: AU6, AU12; sadness: AU1, AU4, AU15; disgust: AU9, AU15, AU17) at three intensities (0.4, 0.675, 0.95), rendered in Unreal Engine 5 on 100 characters: Rocketbox (low resolution) and MetaHuman (high resolution), half male and half female.<br><br><b>Voting.</b> A web app showed two portraits of the same character and asked which one better expressed the emotion. Votes ranked every expression, scored from −1 to 1, and results were read as top-3 accuracy per subgroup. For sadness and disgust a three-round heuristic cut the comparisons from 35,100 to 9,116.<br><br><b>Findings.</b> No universal set exists, but good sets exist per subgroup. Maxing every AU is not best. Resolution matters most: low-resolution faces lose subtle detail, and a strong brow lowerer can turn sadness into anger. Happiness and sadness look alike across genders, while disgust needs gender-specific tuning.",
+  result:"No single set of weights fits every virtual human, but tuned sets work for subgroups of gender and resolution.", readout:[["100","characters"],["3","emotions"],["25,000+","votes"]],
+  pub:"IEEE GEM 2024 · IEEE Consumer Electronics Magazine, Jan 2026", equip:["Unreal Engine 5","MetaHuman","Rocketbox","FACS / EMFACS","Blendshapes","Web app"],
+  links:[["GEM 2024 paper (IEEE)","https://doi.org/10.1109/GEM61861.2024.10585460"],["IEEE Consumer Electronics Magazine paper","https://doi.org/10.1109/MCE.2025.3544816"]],
+  art:{shots:[{img:"assets/facs/pipeline.jpg",fit:1,cap:"portrait dataset pipeline and the voting app"},{img:"assets/facs/top-expressions.jpg",fit:1,cap:"best expressions per emotion: high-resolution MetaHumans (top), low-resolution Rocketbox (bottom)"},{img:"assets/facs/protocol.jpg",fit:1,cap:"the three-round voting protocol for sadness and disgust"}],
+  says:["Same action units, same weights, different face: the emotion changes with the character."]}},
  {id:"sia", title:"Psychotherapy BarVR", t:2025.0, years:"2024–2025", ctx:"PhD research · CGVGroup, PoliTo", tags:["Research","AI","XR"],
   thumb:{img:"assets/sia/bar-lounge.png"}, role:"Researcher & Unity developer", crew:"CGVGroup",
   objective:"A VR therapy environment for social anxiety and agoraphobia: a busy café where patients can practise everyday social situations, step by step, in a safe and controllable setting.",
@@ -607,6 +631,8 @@ function plate(kind){
       return wrap(`<defs><pattern id="hz" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz)"/><g ${s}><circle cx="160" cy="80" r="24"/><path d="M116 170c6-38 82-38 88 0"/></g><g transform="rotate(-10 160 110)"><defs><pattern id="wipTape" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" fill="#FFC928"/><rect width="8" height="16" fill="#1B1B2F"/></pattern></defs><rect x="-60" y="90" width="440" height="40" fill="url(#wipTape)" stroke="#1B1B2F" stroke-width="3"/><rect x="-60" y="99" width="440" height="22" fill="#FFC928" stroke="#1B1B2F" stroke-width="3"/><text x="160" y="115" text-anchor="middle" fill="#1B1B2F" style="font:800 13px var(--f-body);letter-spacing:.18em">WORK IN PROGRESS</text></g>`,"InCare work in progress");
     case "sia":
       return wrap(`<defs><pattern id="hz2" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="1" opacity=".25"/></pattern></defs><rect width="320" height="200" fill="url(#hz2)"/><g ${s}><path d="M130 50h60l-30 46z"/><path d="M160 96v50M136 146h48"/><path d="M60 170h200"/></g><g transform="rotate(-10 160 110)"><defs><pattern id="wipTape" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" fill="#FFC928"/><rect width="8" height="16" fill="#1B1B2F"/></pattern></defs><rect x="-60" y="90" width="440" height="40" fill="url(#wipTape)" stroke="#1B1B2F" stroke-width="3"/><rect x="-60" y="99" width="440" height="22" fill="#FFC928" stroke="#1B1B2F" stroke-width="3"/><text x="160" y="115" text-anchor="middle" fill="#1B1B2F" style="font:800 13px var(--f-body);letter-spacing:.18em">WORK IN PROGRESS</text></g>`,"Psychotherapy BarVR work in progress");
+    case "facs":{const bars=[["AU6",.4],["AU12",.95]];
+      return wrap(`<g ${s}><circle cx="100" cy="95" r="52"/><path d="M78 76q10-7 20-1M106 75q10-6 20 1" ${H}/><circle cx="84" cy="92" r="3.5" fill="currentColor"/><circle cx="116" cy="92" r="3.5" fill="currentColor"/><path d="M80 118q20 20 40 0" ${H} stroke-width="2"/></g>${bars.map(([t,v],i)=>`<g ${s}><rect x="190" y="${70+i*30}" width="100" height="8" rx="4" opacity=".5"/><rect x="190" y="${70+i*30}" width="${100*v}" height="8" rx="4" fill="var(--accent)" stroke="none"/></g>${txt(190,64+i*30,t)}`).join("")}${txt(12,190,"FACS · ACTION UNIT WEIGHTS")}`,"Face with action unit sliders");}
     case "odeon":{let r="";[[250,40,300,120],[300,60,180,190],[150,30,20,90],[300,150,120,190],[20,170,110,30]].forEach(([a,b,c,d],i)=>{r+=`<polyline points="70,140 ${a},${b} ${c},${d}" ${i%2?H:""} opacity=".85"/>`});
       return wrap(`<g ${s}><rect x="20" y="30" width="280" height="160"/><rect x="250" y="120" width="40" height="60" opacity=".6"/><path d="M28 60v40M34 60v40M40 60v40" ${H}/>${r}<circle cx="70" cy="140" r="5" fill="currentColor"/></g>${txt(26,24,"BEDROOM · T30 / C80 ANALYSIS")}`,"Acoustic rays");}
     case "strategy":
@@ -635,7 +661,7 @@ function plate(kind){
 {const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target; if(e.isIntersecting){const p=v.play(); p&&p.catch(()=>{})} else v.pause()}),{threshold:.1});
  const add=n=>{if(n.nodeType!==1)return; if(n.tagName==="VIDEO")io.observe(n); else n.querySelectorAll&&n.querySelectorAll("video").forEach(v=>io.observe(v))};
  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(add))).observe(document.documentElement,{childList:true,subtree:true}); document.querySelectorAll("video").forEach(v=>io.observe(v))}
-const media=(m,c)=>m.drive?`<iframe src="https://drive.google.com/file/d/${m.drive}/preview" title="${m.cap}" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>`:m.yt&&!/^https?:$/.test(location.protocol)?`<a class="yt-fallback" href="https://www.youtube.com/watch?v=${m.yt}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${m.yt}/maxresdefault.jpg" alt="${m.cap} (opens YouTube)" loading="lazy"><span>▶ Watch on YouTube</span></a>`:m.yt?`<iframe src="https://www.youtube-nocookie.com/embed/${m.yt}" title="${m.cap}" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`:m.img?`<img src="${m.img}" alt="" loading="lazy">`:m.video?`<video src="${m.video}" muted loop playsinline preload="metadata"${c?" controls":""}></video>`:plate(m.plate);
+const media=(m,c)=>m.drive?`<iframe src="https://drive.google.com/file/d/${m.drive}/preview" title="${m.cap}" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>`:m.yt&&!/^https?:$/.test(location.protocol)?`<a class="yt-fallback" href="https://www.youtube.com/watch?v=${m.yt}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${m.yt}/maxresdefault.jpg" alt="${m.cap} (opens YouTube)" loading="lazy"><span>▶ Watch on YouTube</span></a>`:m.yt?`<iframe src="https://www.youtube-nocookie.com/embed/${m.yt}" title="${m.cap}" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`:m.img?`<img src="${m.img}" alt=""${m.fit?' class="fit"':""} loading="lazy">`:m.video?`<video src="${m.video}" muted loop playsinline preload="metadata"${c?" controls":""}></video>`:plate(m.plate);
 /* ---------- cards ---------- */
 const grid=document.getElementById("grid");
 P.forEach(p=>{
