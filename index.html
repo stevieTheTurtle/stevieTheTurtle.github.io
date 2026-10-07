@@ -691,7 +691,7 @@ TAGS.forEach(t=>{const c=document.createElement("button"); c.type="button"; c.cl
   c.onclick=()=>{activeTag=t; [...chips.children].forEach(x=>x.setAttribute("aria-pressed",x===c)); P.forEach(p=>{p.el.hidden=!visible(p); p.pin.hidden=!visible(p)}); layoutAxis();}; chips.appendChild(c);});
 function visible(p){return activeTag==="All"||p.tags.includes(activeTag)}
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-function order(){return [...P].sort((a,b)=>a.t-b.t)}   // chronological
+function order(){return [...P].sort((a,b)=>b.t-a.t)}   // newest first (Nº stays chronological)
 function render(animate){
   const first=new Map(P.map(p=>[p.el,p.el.getBoundingClientRect()]));
   order().forEach(p=>grid.appendChild(p.el));
