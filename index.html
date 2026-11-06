@@ -654,7 +654,7 @@ const P=[
   method:"Room modelled in SketchUp, geometric acoustic simulation in ODEON Combined; real absorber, reflector and diffuser panels replicated in software to test the correction.",
   equip:["SketchUp","ODEON Combined","Architectural acoustics"], links:[["Slides (PDF)","assets/odeon/odeon-slides.pdf"],["Report (PDF)","assets/odeon/odeon-report.pdf"]],
   art:{shots:[{img:"assets/odeon/room-sketchup.jpg",cap:"SketchUp model"},{img:"assets/odeon/room-real.jpg",cap:"the room, as it is"},{img:"assets/odeon/odeon-model.jpg",cap:"ODEON model with source and receiver"},{img:"assets/odeon/reverb-times.png",cap:"reverberation time by band"},{img:"assets/odeon/decay-curves.png",cap:"sound decay curves"},{img:"assets/odeon/spl-maps.png",cap:"sound pressure maps"},{img:"assets/odeon/reflectogram.jpg",cap:"reflectogram"},{img:"assets/odeon/panels-ceiling.jpg",cap:"ceiling absorbers"},{img:"assets/odeon/panels-wall.jpg",cap:"wall panels"},{img:"assets/odeon/room-treated.jpg",cap:"the treated room"}], says:["Sound is a material too: it decides how a room feels to be in."]}},
- {id:"strategy", title:"Digital Strategy — Lijoi Liuteria", t:2021.8, years:"Oct 2021 – Jan 2022", ctx:"Digital strategy project", tags:["Strategy"],
+ {id:"strategy", title:"Digital Strategy — Lijoi Liuteria", t:2021.8, years:"Oct 2021 – Jan 2022", ctx:"Digital strategy project", tags:["Marketing"],
   thumb:{img:"assets/strategy/site-audit.jpg"}, role:"Strategy & content design", crew:"Team of five: Arrigo, Calzolari, Donalisio, Kamyar, Roletto",
   objective:"Give a young violin-making workshop in Savigliano (Cuneo) a digital voice: the luthier ran every touchpoint alone, had no communication budget and almost no online reviews.",
   method:"<b>Where we are.</b> Audit of the website (desktop 94/100, mobile 35/100 on PageSpeed), Facebook, Instagram and Google My Business, plus a competitor map on market reach against service specialisation.<br><br><b>Where to go.</b> Six goals: better audio-video, a clear brand identity built on the luthier's academic training, a stronger reputation, at least +100% traffic, loyalty, and more sales. Targets came from the BOA2RD method and user personas, with a key concept: tradition and modernity in one instrument.<br><br><b>How to get there.</b> A buy-cycle and funnel (TOFU, MOFU, BOFU, flywheel), touchpoint fixes, three budget packages, an editorial plan with recurring columns (#TavoloDelLiutaio, #VoceAlleCorde), ADV, influencers and a contingency plan, and KPIs per goal.",
@@ -793,7 +793,7 @@ P.forEach(p=>{
   ["mouseleave","blur"].forEach(ev=>b.addEventListener(ev,()=>hilite(p.id,false)));
   p.el=b;
 });
-const TAG_ORDER=["XR","Games","Research","AI","Teaching","Audio","Animation","Strategy"], allTags=new Set(P.flatMap(p=>p.tags));
+const TAG_ORDER=["XR","Games","Research","AI","Teaching","Audio","Animation","Marketing"], allTags=new Set(P.flatMap(p=>p.tags));
 const TAGS=["All",...TAG_ORDER.filter(t=>allTags.has(t)),...[...allTags].filter(t=>!TAG_ORDER.includes(t))]; let activeTag="All";
 const chips=document.getElementById("chips");
 TAGS.forEach(t=>{const c=document.createElement("button"); c.type="button"; c.className="chip"; c.textContent=t; c.setAttribute("aria-pressed",t===activeTag);
